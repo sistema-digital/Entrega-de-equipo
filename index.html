@@ -563,17 +563,6 @@ button{-webkit-tap-highlight-color:transparent}
 .kpi-button{width:100%;cursor:pointer;text-align:left;font:inherit;appearance:none;-webkit-appearance:none}
 .kpi-button:active{transform:scale(.985)}
 .kpi-button .kpi-copy{min-width:0}
-.report-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 14px}
-.report-toolbar button{min-height:42px;border-radius:10px;font-size:11px;font-weight:800;border:1px solid #e3e7ec;box-shadow:var(--shadow)}
-.report-toolbar .secondary{background:#fff;color:#1f2b37}
-.report-toolbar .primary{background:var(--red);border-color:var(--red);color:#fff}
-.report-summary{font-size:11px;color:#7d8793;margin:0 0 10px}
-.report-row{background:#fff;border:1px solid #eef0f3;border-radius:10px;padding:12px;box-shadow:var(--shadow)}
-.report-row strong{display:block;font-size:12px;color:#20252d}
-.report-row small{display:block;font-size:10px;color:#7f8894;line-height:1.35;margin-top:4px}
-.report-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.report-meta .status{margin-top:0}
-.report-empty{padding:18px 12px;text-align:center;color:#8a939e;font-size:12px;background:#fff;border:1px solid #eef0f3;border-radius:10px;box-shadow:var(--shadow)}
 .quick-actions{gap:9px}
 .quick{
   position:relative;border:1px solid #eef0f3;background:#fff;border-radius:10px;padding:12px 28px 12px 12px;min-height:88px;
@@ -687,6 +676,14 @@ input[type=text],input[type=date],input[type=password],textarea{min-height:46px;
 .pwa-status-warn{color:#b36b00!important}
 html.pwa-standalone .pwa-install-card{display:none!important}
 
+
+/* V29 — fecha principal en historial */
+.history-main-date{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:8px;padding:8px 10px;border-radius:8px;background:#f6f7f9;border:1px solid #eceff2
+}
+.history-main-date span{font-size:8px;font-weight:800;color:#8a929d;letter-spacing:.35px}
+.history-main-date b{font-size:11px;color:#20252d;text-align:right}
 </style>
 
 <!-- Iconos Lucide: mismo lenguaje visual lineal de la referencia -->
@@ -714,7 +711,6 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 <div class="auth-screen" id="authScreen">
   <div class="auth-card">
     <div class="auth-head">
-      <div class="auth-logo">D</div>
       <h1>ENTREGA DE EQUIPO</h1>
       <p>Inicio de sesión</p>
     </div>
@@ -729,10 +725,6 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       </div>
       <div class="auth-error" id="loginError"></div>
       <button class="auth-submit" type="button" onclick="login()">INICIAR SESIÓN</button>
-      <div class="auth-hint">
-        Los usuarios se guardan en la tabla <b>app_usuarios</b> de Supabase.<br>
-        Administrador inicial: <b>admin</b> · Contraseña: <b>admin123</b>
-      </div>
     </div>
   </div>
 </div>
@@ -754,10 +746,10 @@ html.pwa-standalone .pwa-install-card{display:none!important}
     </div>
     <div class="page home-page">
       <div class="kpis">
-        <button class="kpi kpi-button" type="button" onclick="openKpiReport('assigned')"><span class="kpi-icon kpi-red"><i data-lucide="contact" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiAssigned">0</div><div class="label">Activos asignados</div></div></button>
-        <button class="kpi kpi-button" type="button" onclick="openKpiReport('available')"><span class="kpi-icon kpi-green"><i data-lucide="package" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiAvailable">0</div><div class="label">Disponibles</div></div></button>
-        <button class="kpi kpi-button" type="button" onclick="openKpiReport('today')"><span class="kpi-icon kpi-blue"><i data-lucide="calendar-days" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiToday">0</div><div class="label">Entregas hoy</div></div></button>
-        <button class="kpi kpi-button" type="button" onclick="openKpiReport('overdue')"><span class="kpi-icon kpi-orange"><i data-lucide="clock-3" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiOverdue">0</div><div class="label">Vencidos</div></div></button>
+        <button class="kpi kpi-button" type="button" onclick="openAssetDashboardFilter('assigned')"><span class="kpi-icon kpi-red"><i data-lucide="contact" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiAssigned">0</div><div class="label">Activos asignados</div></div></button>
+        <button class="kpi kpi-button" type="button" onclick="openAssetDashboardFilter('available')"><span class="kpi-icon kpi-green"><i data-lucide="package" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiAvailable">0</div><div class="label">Disponibles</div></div></button>
+        <button class="kpi kpi-button" type="button" onclick="openAssetDashboardFilter('today')"><span class="kpi-icon kpi-blue"><i data-lucide="calendar-days" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiToday">0</div><div class="label">Entregas hoy</div></div></button>
+        <button class="kpi kpi-button" type="button" onclick="openAssetDashboardFilter('overdue')"><span class="kpi-icon kpi-orange"><i data-lucide="clock-3" aria-hidden="true"></i></span><div class="kpi-copy"><div class="num" id="kpiOverdue">0</div><div class="label">Vencidos</div></div></button>
       </div>
 
       <div class="section-head"><h3>Acciones rápidas</h3></div>
@@ -1101,22 +1093,10 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       <button class="filter" data-eqfilter="IMPLEMENTO" onclick="setEqFilter('IMPLEMENTO',this)">IMPLEMENTOS</button>
       <button class="filter" data-eqfilter="available" onclick="setEqFilter('available',this)">DISPONIBLES</button>
       <button class="filter" data-eqfilter="assigned" onclick="setEqFilter('assigned',this)">ASIGNADOS</button>
+      <button class="filter" data-eqfilter="today" onclick="setEqFilter('today',this)">ENTREGADOS HOY</button>
       <button class="filter" data-eqfilter="overdue" onclick="setEqFilter('overdue',this)">VENCIDOS</button>
     </div>
     <div class="page" style="padding-top:0"><div class="list" id="equipmentList"></div></div>
-  </section>
-
-  <!-- REPORTE KPI -->
-  <section class="view" id="view-kpi-report">
-    <div class="page">
-      <div class="section-head"><h3 id="kpiReportTitle">Detalle del dashboard</h3></div>
-      <p class="report-summary" id="kpiReportSummary">0 registros encontrados.</p>
-      <div class="report-toolbar">
-        <button class="secondary" type="button" onclick="printKpiReportPdf()">IMPRIMIR</button>
-        <button class="primary" type="button" onclick="shareKpiReportPdf()">COMPARTIR PDF</button>
-      </div>
-      <div class="list" id="kpiReportList"></div>
-    </div>
   </section>
 
   <!-- HISTORIAL -->
@@ -1295,10 +1275,11 @@ html.pwa-standalone .pwa-install-card{display:none!important}
     <div class="modal-head"><h3 id="equipmentEditorTitle">Nuevo equipo</h3><button onclick="closeEquipmentEditor()">×</button></div>
     <div class="form-modal-fields">
       <input id="equipmentEditorOriginalId" type="hidden">
-      <div class="field"><label class="req">NÚMERO DE EQUIPO</label><input id="equipmentEditorId" type="text" placeholder="Ej. 484104"></div>
-      <div class="field"><label class="req">TIPO DE EQUIPO</label><input id="equipmentEditorType" type="text" placeholder="Ej. TRACTOR"></div>
+      <input id="equipmentEditorAssetClass" type="hidden" value="EQUIPO">
+      <div class="field"><label class="req" id="equipmentEditorNumberLabel">NÚMERO DE EQUIPO</label><input id="equipmentEditorId" type="text" placeholder="Ej. 484104"></div>
+      <div class="field"><label class="req" id="equipmentEditorTypeLabel">TIPO DE EQUIPO</label><input id="equipmentEditorType" type="text" placeholder="Ej. TRACTOR"></div>
       <div class="field">
-        <label>FOTO DEL EQUIPO</label>
+        <label id="equipmentEditorPhotoLabel">FOTO DEL EQUIPO</label>
         <div class="equipment-photo-editor">
           <div class="equipment-photo-preview" id="equipmentPhotoPreview">
             <i id="equipmentPhotoPlaceholder" data-lucide="image-plus" aria-hidden="true"></i>
@@ -1735,7 +1716,7 @@ function initImplementCanvas(){}
 
 const DATA_KEY="entrega_equipo_app_full_v1";
 const DRAFT_KEY="entrega_equipo_form_draft_v1";
-let currentView="home", currentStep=0, currentImplementStep=0, eqFilter="all", pickerType=null, returnEquipmentId=null, returnAssetClass=null, catalogTab="EQUIPO", currentKpiReportType="assigned";
+let currentView="home", currentStep=0, currentImplementStep=0, eqFilter="all", pickerType=null, returnEquipmentId=null, returnAssetClass=null, catalogTab="EQUIPO";
 let signatureUnlocked=false,drawing=false,canvas,ctx;
 let roleSignatures={
  taller:{canvas:null,ctx:null,pad:null,hasSignature:false,pendingData:null,drawing:false,fallbackWired:false},
@@ -2488,7 +2469,7 @@ async function saveOwnPassword(){
 }
 
 function titleFor(view){
- const map={home:"ENTREGA DE EQUIPO",delivery:"ENTREGA DE EQUIPO",implement:"ENTREGA DE IMPLEMENTO",returns:"DEVOLUCIÓN",equipment:"EQUIPOS E IMPLEMENTOS",history:"HISTORIAL",catalog:"ADMINISTRAR CATÁLOGO",users:"ADMINISTRAR USUARIOS",profile:"PERFIL","kpi-report":"DETALLE DEL DASHBOARD"};
+ const map={home:"ENTREGA DE EQUIPO",delivery:"ENTREGA DE EQUIPO",implement:"ENTREGA DE IMPLEMENTO",returns:"DEVOLUCIÓN",equipment:"EQUIPOS E IMPLEMENTOS",history:"HISTORIAL",catalog:"ADMINISTRAR CATÁLOGO",users:"ADMINISTRAR USUARIOS",profile:"PERFIL"};
  return map[view]||"ENTREGA DE EQUIPO";
 }
 function go(view,btn){
@@ -2503,10 +2484,10 @@ function go(view,btn){
  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
  document.getElementById("view-"+view).classList.add("active");
  document.getElementById("appTitle").textContent=titleFor(view);
- document.querySelectorAll(".nav-btn").forEach(n=>n.classList.toggle("active",n.dataset.nav===view || (view==="returns"&&n.dataset.nav==="equipment") || (view==="kpi-report"&&n.dataset.nav==="home")));
+ document.querySelectorAll(".nav-btn").forEach(n=>n.classList.toggle("active",n.dataset.nav===view || (view==="returns"&&n.dataset.nav==="equipment")));
  document.getElementById("formActions").classList.toggle("show",view==="delivery");
  document.getElementById("implementFormActions").classList.toggle("show",view==="implement");
- const detailView=view==="delivery"||view==="implement"||view==="catalog"||view==="users"||view==="kpi-report";
+ const detailView=view==="delivery"||view==="implement"||view==="catalog"||view==="users";
  document.getElementById("fab").classList.toggle("hide",detailView);
  document.getElementById("menuBtn").style.display=detailView?"none":"grid";
  document.getElementById("backBtn").style.display=detailView?"grid":"none";
@@ -2516,7 +2497,6 @@ function go(view,btn){
  if(view==="history")renderHistory();
  if(view==="catalog")renderCatalog();
  if(view==="users")renderUsers();
- if(view==="kpi-report")renderKpiReport();
  if(view==="delivery"){populateFormPickers();setStep(currentStep)}
  if(view==="implement"){setImplementStep(currentImplementStep)}
  window.scrollTo({top:0,behavior:"smooth"});
@@ -2545,147 +2525,25 @@ function startDeliveryType(type){
 function formatDateTime(value){
  return new Date(value).toLocaleString("es-PA",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
 }
-function getKpiReportData(type=currentKpiReportType){
- updateEquipmentDueStates();
+function assetDeliveredToday(e){
  const today=new Date().toDateString();
- if(type==="assigned"){
-  const rows=db.equipment.filter(e=>e.status==="assigned");
-  return {type,title:"Activos asignados",summary:`${rows.length} equipo(s) asignado(s).`,rows};
- }
- if(type==="available"){
-  const rows=db.equipment.filter(e=>e.status==="available");
-  return {type,title:"Equipos disponibles",summary:`${rows.length} equipo(s) disponible(s).`,rows};
- }
- if(type==="overdue"){
-  const rows=db.equipment.filter(e=>e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays<0);
-  return {type,title:"Equipos vencidos",summary:`${rows.length} equipo(s) vencido(s).`,rows};
- }
- const rows=db.movements
-  .filter(m=>m.type==="delivery"&&new Date(m.date).toDateString()===today)
-  .map(m=>{
-   const eq=db.equipment.find(e=>e.id===m.equipmentId&&String(e.assetClass||"EQUIPO")===String(m.assetClass||"EQUIPO"));
-   return {
-    id:m.equipmentId,
-    type:eq?.type||m.form?.tipoEquipo||m.form?.tipo||"Equipo",
-    assetClass:m.assetClass||eq?.assetClass||"EQUIPO",
-    finca:m.finca||m.form?.finca||"",
-    assignedTo:m.operator||m.form?.recibidoOperador||m.form?.recibidoPorCampo||"",
-    date:m.date
-   };
-  });
- return {type:"today",title:"Entregas de hoy",summary:`${rows.length} entrega(s) registradas hoy.`,rows};
+ return db.movements.some(m=>
+  m.type==="delivery"
+  &&m.equipmentId===e.id
+  &&String(m.assetClass||"EQUIPO")===String(e.assetClass||"EQUIPO")
+  &&new Date(m.date).toDateString()===today
+ );
 }
-function reportEquipmentExtra(e){
- if(e.status==="available")return "Disponible";
- if(typeof e.dueDays==="number"&&e.dueDays<0)return `${Math.abs(e.dueDays)} día(s) vencido(s)`;
- if(typeof e.dueDays==="number")return `${e.dueDays} día(s) restantes`;
- return e.finca||"Asignado";
-}
-function renderKpiReport(){
- const data=getKpiReportData();
- document.getElementById("kpiReportTitle").textContent=data.title;
- document.getElementById("kpiReportSummary").textContent=data.summary;
- const list=document.getElementById("kpiReportList");
- if(!data.rows.length){
-  list.innerHTML='<div class="report-empty">No hay registros para mostrar.</div>';
-  refreshIcons();
-  return;
- }
- list.innerHTML=data.type==="today"
-  ? data.rows.map(r=>`<div class="report-row"><strong>${esc(r.id)} · ${esc(r.type)}</strong><small>${esc(r.assetClass||"EQUIPO")} · ${formatDateTime(r.date)}</small><small>${esc(r.finca||"SIN FINCA")} ${r.assignedTo?`· ${esc(r.assignedTo)}`:""}</small><div class="report-meta"><span class="status assigned">ENTREGA DE HOY</span></div></div>`).join("")
-  : data.rows.map(e=>{
-      const overdue=e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays<0;
-      const cls=e.status==="available"?"available":overdue?"overdue":"assigned";
-      const label=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
-      return `<div class="report-row"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")}</small><small>${e.assignedTo?esc(e.assignedTo)+" · ":""}${esc(reportEquipmentExtra(e))}</small><div class="report-meta"><span class="status ${cls}">${label}</span></div></div>`;
-    }).join("");
-  refreshIcons();
-}
-function openKpiReport(type){
- currentKpiReportType=type;
- go("kpi-report");
-}
-function fileSafeName(text){
- return String(text||"reporte").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
-}
-async function buildKpiReportPdf(){
- const jspdf=window.jspdf?.jsPDF;
- if(!jspdf){toast("No se pudo cargar el generador PDF");return null}
- const data=getKpiReportData();
- const doc=new jspdf({unit:"pt",format:"letter"});
- const pageH=doc.internal.pageSize.getHeight();
- const pageW=doc.internal.pageSize.getWidth();
- const left=40;
- const maxW=pageW-80;
- let y=40;
- const ensure=(extra=20)=>{ if(y+extra>pageH-40){doc.addPage(); y=40;} };
- const addText=(txt,size=10,bold=false,spacing=14)=>{
-  doc.setFont("helvetica",bold?"bold":"normal");
-  doc.setFontSize(size);
-  const lines=doc.splitTextToSize(String(txt),maxW);
-  lines.forEach(line=>{ensure(spacing); doc.text(line,left,y); y+=spacing;});
- };
- addText(data.title,16,true,18);
- addText(`Generado: ${formatDateTime(new Date().toISOString())}`,10,false,13);
- addText(data.summary,11,false,14);
- y+=6;
- if(!data.rows.length){ addText("No hay registros para mostrar.",11,false,14); }
- else if(data.type==="today"){
-  data.rows.forEach((r,i)=>{
-   ensure(60);
-   addText(`${i+1}. ${r.id} · ${r.type}`,11,true,14);
-   addText(`Clase: ${r.assetClass||"EQUIPO"} | Fecha: ${formatDateTime(r.date)}`,10,false,13);
-   addText(`Finca: ${r.finca||"SIN FINCA"} | Responsable: ${r.assignedTo||"Sin responsable"}`,10,false,13);
-   y+=4;
-  });
- }else{
-  data.rows.forEach((e,i)=>{
-   ensure(72);
-   const overdue=e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays<0;
-   const label=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
-   addText(`${i+1}. ${e.id} · ${e.type}`,11,true,14);
-   addText(`Clase: ${e.assetClass||"EQUIPO"} | Estado: ${label}`,10,false,13);
-   addText(`Finca: ${e.finca||"SIN FINCA"} | Responsable: ${e.assignedTo||"Sin responsable"}`,10,false,13);
-   addText(`Detalle: ${reportEquipmentExtra(e)}`,10,false,13);
-   y+=4;
-  });
- }
- const blob=doc.output("blob");
- const filename=`${fileSafeName(data.title)}_${todayISO()}.pdf`;
- const url=URL.createObjectURL(blob);
- return {blob,url,filename,title:data.title};
-}
-async function printKpiReportPdf(){
- const pdf=await buildKpiReportPdf();
- if(!pdf)return;
- const win=window.open(pdf.url,"_blank");
- if(!win){
-  const a=document.createElement("a");a.href=pdf.url;a.download=pdf.filename;a.click();
-  toast("Se descargó el PDF para imprimir");
-  setTimeout(()=>URL.revokeObjectURL(pdf.url),5000);
-  return;
- }
- toast("Abriendo PDF para imprimir");
- setTimeout(()=>{try{win.focus();win.print()}catch(e){}},900);
- setTimeout(()=>URL.revokeObjectURL(pdf.url),8000);
-}
-async function shareKpiReportPdf(){
- const pdf=await buildKpiReportPdf();
- if(!pdf)return;
- const file=new File([pdf.blob],pdf.filename,{type:"application/pdf"});
- try{
-  if(navigator.canShare&&navigator.canShare({files:[file]})){
-   await navigator.share({title:pdf.title,text:pdf.title,files:[file]});
-   toast("PDF compartido");
-  }else{
-   const a=document.createElement("a");a.href=pdf.url;a.download=pdf.filename;a.click();
-   toast("Tu navegador no permite compartir. Se descargó el PDF.");
-  }
- }catch(err){
-  if(err?.name!=="AbortError")toast("No se pudo compartir el PDF");
- }finally{
-  setTimeout(()=>URL.revokeObjectURL(pdf.url),5000);
- }
+function openAssetDashboardFilter(type){
+ eqFilter=type;
+ const search=document.getElementById("equipmentSearch");
+ if(search)search.value="";
+ go("equipment");
+ document.querySelectorAll('[data-eqfilter]').forEach(btn=>
+  btn.classList.toggle("active",btn.dataset.eqfilter===type)
+ );
+ renderEquipment();
+ refreshIcons();
 }
 
 function renderDashboard(){
@@ -2741,6 +2599,7 @@ function renderEquipment(){
   const matchFilter=
     eqFilter==="all" ||
     (eqFilter==="overdue" ? overdue :
+      eqFilter==="today" ? assetDeliveredToday(e) :
       (eqFilter==="EQUIPO" || eqFilter==="IMPLEMENTO") ? e.assetClass===eqFilter :
       e.status===eqFilter);
   return matchFilter && `${e.id} ${e.type} ${e.assetClass||""} ${e.finca} ${e.assignedTo||""}`.toLowerCase().includes(q);
@@ -2766,7 +2625,8 @@ function renderHistory(){
   const editAction=(m.type==="delivery"&&isAdmin())
    ?`<div class="movement-actions"><button type="button" onclick="openLoanEditorV28('${safeMovementId}')">EDITAR PRÉSTAMO</button></div>`
    :"";
-  return `<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><strong>${m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN"} · ${esc(m.equipmentId)}</strong><p>${esc(m.assetClass||db.equipment.find(e=>e.id===m.equipmentId && e.assetClass==="EQUIPO")?.assetClass||"EQUIPO")} · ${new Date(m.date).toLocaleString("es-PA")} · ${esc(m.finca||"")} ${m.operator?"· "+esc(m.operator):""}</p>${editAction}</div></div>`;
+  const assetClass=esc(m.assetClass||db.equipment.find(e=>e.id===m.equipmentId && e.assetClass==="EQUIPO")?.assetClass||"EQUIPO");
+  return `<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><strong>${m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN"} · ${esc(m.equipmentId)}</strong><div class="history-main-date"><span>FECHA DEL REGISTRO</span><b>${formatDateTime(m.date)}</b></div><p>${assetClass}${m.finca?" · "+esc(m.finca):""}${m.operator?" · "+esc(m.operator):""}</p>${editAction}</div></div>`;
  }).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">Sin movimientos.</div></div>`;
 }
 
@@ -3276,7 +3136,7 @@ function refreshIcons(){
   window.lucide.createIcons({attrs:{"stroke-width":1.8}});
  }
 }
-function renderAll(){updateEquipmentDueStates();renderDashboard();renderEquipment();renderReturns();renderHistory();if(currentView==="kpi-report")renderKpiReport();checkOverdueNotifications();saveDB();refreshIcons()}
+function renderAll(){updateEquipmentDueStates();renderDashboard();renderEquipment();renderReturns();renderHistory();checkOverdueNotifications();saveDB();refreshIcons()}
 
 
 /* ==========================================================
@@ -5409,6 +5269,229 @@ try{
  window.matchMedia("(display-mode: standalone)")
   .addEventListener("change",updatePwaUiV27);
 }catch(e){}
+
+
+
+
+/* ==========================================================
+   V31 — IMPLEMENTOS EDITABLES / ELIMINABLES POR ADMIN
+   - Reutiliza el editor visual de equipos para implementos.
+   - Equipos siguen usando sus RPC existentes.
+   - Implementos usan app_guardar_implemento/app_eliminar_implemento.
+   ========================================================== */
+let assetEditorClassV31="EQUIPO";
+
+function setCatalogTab(tab){
+ if(!requireAdmin())return;
+ catalogTab=String(tab||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ document.getElementById("catalogEquipmentTab").classList.toggle("active",catalogTab==="EQUIPO");
+ document.getElementById("catalogImplementTab").classList.toggle("active",catalogTab==="IMPLEMENTO");
+ // Se conserva la creación de nuevos registros únicamente para EQUIPOS.
+ document.getElementById("catalogAddBtn").style.display=catalogTab==="EQUIPO"?"block":"none";
+ document.getElementById("catalogNote").textContent=catalogTab==="EQUIPO"
+  ?"Los EQUIPOS se pueden agregar, editar o borrar."
+  :"Los IMPLEMENTOS se pueden editar o eliminar. No se puede eliminar un implemento mientras esté asignado.";
+ renderCatalog();
+}
+
+function renderCatalog(){
+ if(!requireAdmin())return;
+ const q=(document.getElementById("catalogSearch")?.value||"").toLowerCase().trim();
+ const rows=db.equipment
+  .filter(e=>String(e.assetClass||"EQUIPO").toUpperCase()===catalogTab)
+  .filter(e=>`${e.id} ${e.type}`.toLowerCase().includes(q))
+  .sort((a,b)=>String(a.id).localeCompare(String(b.id),undefined,{numeric:true}));
+ const el=document.getElementById("catalogList");
+ if(!rows.length){
+  el.innerHTML='<div class="card"><div class="card-body" style="text-align:center;color:#888">Sin registros.</div></div>';
+  return;
+ }
+ el.innerHTML=rows.map(e=>{
+  const kind=String(e.assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+  const safeId=String(e.id).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+  return `
+   <div class="catalog-row">
+    <div class="catalog-main">
+     <strong>${esc(e.id)} · ${esc(e.type)}</strong>
+     <small>${kind==="EQUIPO"?"EQUIPO":"IMPLEMENTO / REFERENCIA"} · ${e.status==="assigned"?"ASIGNADO":"DISPONIBLE"}</small>
+    </div>
+    <div class="catalog-actions">
+     <button onclick="openEquipmentEditor('${safeId}','${kind}')">EDITAR</button>
+     <button class="delete" onclick="deleteEquipment('${safeId}','${kind}')">BORRAR</button>
+    </div>
+   </div>`;
+ }).join("");
+}
+
+function equipmentCard(e){
+ const overdue=e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays<0;
+ const cls=e.status==="available"?"available":overdue?"overdue":"assigned";
+ const kind=String(e.assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const icon=kind==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>';
+ const safeId=String(e.id).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+ const stateText=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
+ const detail=e.status==="assigned"
+   ? (overdue?`${Math.abs(e.dueDays)} días vencidos`:(typeof e.dueDays==="number"?(e.dueDays===0?"Vence hoy":`${e.dueDays} días restantes`):esc(e.finca||"Asignado")))
+   : `${esc(e.id)} · ${esc(e.type)}`;
+ const adminActions=isAdmin()?`
+   <div class="equipment-card-actions">
+     <button class="edit" onclick="event.stopPropagation();openEquipmentEditor('${safeId}','${kind}')">EDITAR</button>
+     <button class="delete" onclick="event.stopPropagation();deleteEquipment('${safeId}','${kind}')">ELIMINAR</button>
+   </div>`:"";
+ return `<div class="equip-card" onclick="showEquipment('${safeId}','${kind}')">
+   <div class="equip-card-main">
+     <div class="equip-photo" aria-hidden="true">${e.photo?`<img src="${esc(e.photo)}" alt="">`:`<span>${icon}</span>`}</div>
+     <div class="equip-head">
+       <strong>${esc(e.type)}</strong>
+       <small>${detail}</small>
+       <span class="status ${cls}">${stateText}</span>
+     </div>
+     <span class="equip-chevron" aria-hidden="true"><i data-lucide="chevron-right"></i></span>
+   </div>
+   ${adminActions}
+ </div>`;
+}
+
+function applyAssetEditorLabelsV31(kind){
+ const isImplement=kind==="IMPLEMENTO";
+ const word=isImplement?"IMPLEMENTO":"EQUIPO";
+ const title=document.getElementById("equipmentEditorTitle");
+ const nLabel=document.getElementById("equipmentEditorNumberLabel");
+ const tLabel=document.getElementById("equipmentEditorTypeLabel");
+ const pLabel=document.getElementById("equipmentEditorPhotoLabel");
+ const nInput=document.getElementById("equipmentEditorId");
+ const tInput=document.getElementById("equipmentEditorType");
+ if(nLabel)nLabel.textContent=isImplement?"NÚMERO / REFERENCIA DEL IMPLEMENTO":"NÚMERO DE EQUIPO";
+ if(tLabel)tLabel.textContent=`TIPO DE ${word}`;
+ if(pLabel)pLabel.textContent=`FOTO DEL ${word}`;
+ if(nInput)nInput.placeholder=isImplement?"Ej. 493021":"Ej. 484104";
+ if(tInput)tInput.placeholder=isImplement?"Ej. CARRETA":"Ej. TRACTOR";
+ if(title)title.textContent=`Editar ${isImplement?"implemento":"equipo"}`;
+}
+
+function openEquipmentEditor(id="",assetClass="EQUIPO"){
+ if(!requireAdmin())return;
+ const kind=String(assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ assetEditorClassV31=kind;
+ const modal=document.getElementById("equipmentEditorModal");
+ const original=document.getElementById("equipmentEditorOriginalId");
+ const classInput=document.getElementById("equipmentEditorAssetClass");
+ const number=document.getElementById("equipmentEditorId");
+ const type=document.getElementById("equipmentEditorType");
+ const photoInput=document.getElementById("equipmentEditorPhoto");
+ if(classInput)classInput.value=kind;
+ applyAssetEditorLabelsV31(kind);
+
+ equipmentEditorPhotoFileV25=null;
+ equipmentEditorPhotoRemovedV25=false;
+ equipmentEditorExistingUrlV25="";
+ if(photoInput)photoInput.value="";
+ number.readOnly=false;
+
+ if(id){
+  const e=db.equipment.find(x=>String(x.id)===String(id)&&String(x.assetClass||"EQUIPO").toUpperCase()===kind);
+  if(!e)return;
+  original.value=e.id;
+  number.value=e.id;
+  type.value=e.type||"";
+  // Evita romper el préstamo activo cambiando la referencia mientras está asignado.
+  if(kind==="IMPLEMENTO"&&e.status==="assigned")number.readOnly=true;
+  equipmentEditorExistingUrlV25=e.photo||"";
+  setEquipmentPhotoPreview(equipmentEditorExistingUrlV25);
+ }else{
+  if(kind==="IMPLEMENTO"){
+   toast("Los implementos existentes se pueden editar desde Administrar catálogos");
+   return;
+  }
+  document.getElementById("equipmentEditorTitle").textContent="Nuevo equipo";
+  original.value="";
+  number.value="";
+  type.value="";
+  setEquipmentPhotoPreview("");
+ }
+
+ modal.classList.add("open");
+ refreshIcons();
+ setTimeout(()=>number.focus(),120);
+}
+
+async function uploadAssetPhotoUrlV31(code,kind){
+ if(!equipmentEditorPhotoFileV25)return equipmentEditorExistingUrlV25||null;
+ const safeCode=safeStorageNameV25(code);
+ const folder=kind==="IMPLEMENTO"?"implementos":"equipos";
+ const path=`${folder}/${safeCode}/${Date.now()}-${Math.random().toString(16).slice(2,8)}.jpg`;
+ return await uploadPublicPhotoV25(equipmentEditorPhotoFileV25,path);
+}
+
+async function saveEquipmentEditor(){
+ if(!requireAdmin()||!customSessionToken)return;
+ const kind=String(document.getElementById("equipmentEditorAssetClass")?.value||assetEditorClassV31||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const original=normalizeEquipmentNumber(document.getElementById("equipmentEditorOriginalId").value);
+ const id=normalizeEquipmentNumber(document.getElementById("equipmentEditorId").value);
+ const type=String(document.getElementById("equipmentEditorType").value||"").trim();
+ const noun=kind==="IMPLEMENTO"?"implemento":"equipo";
+ if(!id||!type){toast(`Completa número y tipo de ${noun}`);return;}
+ if(kind==="IMPLEMENTO"&&!original){toast("Solo se permite editar implementos existentes");return;}
+
+ let photoUrl=null;
+ try{
+  if(equipmentEditorPhotoRemovedV25)photoUrl=null;
+  else if(equipmentEditorPhotoFileV25){
+   toast("Subiendo foto...");
+   photoUrl=await uploadAssetPhotoUrlV31(id,kind);
+  }else photoUrl=equipmentEditorExistingUrlV25||null;
+ }catch(err){toast("No se pudo subir la foto a Supabase");return;}
+
+ const rpcName=kind==="IMPLEMENTO"?"app_guardar_implemento":"app_guardar_equipo";
+ const {error}=await sb.rpc(rpcName,{
+  p_token:customSessionToken,
+  p_original_codigo:original||null,
+  p_codigo:id,
+  p_tipo:type,
+  p_foto_url:photoUrl
+ });
+ if(error){
+  const msg=customRpcError(error);
+  if(kind==="IMPLEMENTO"&&(String(error.code||"")==="PGRST202"||msg.includes("app_guardar_implemento"))){
+   toast("Ejecuta primero el SQL V31 en Supabase");
+  }else toast(msg);
+  return;
+ }
+ equipmentEditorPhotoFileV25=null;
+ equipmentEditorExistingUrlV25=photoUrl||"";
+ closeEquipmentEditor();
+ await syncFromSupabase();
+ renderCatalog();
+ renderAll();
+ toast(kind==="IMPLEMENTO"?"Implemento actualizado":"Equipo actualizado");
+}
+
+function deleteEquipment(id,assetClass="EQUIPO"){
+ if(!requireAdmin()||!customSessionToken)return;
+ const kind=String(assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const noun=kind==="IMPLEMENTO"?"implemento":"equipo";
+ const e=db.equipment.find(x=>String(x.id)===String(id)&&String(x.assetClass||"EQUIPO").toUpperCase()===kind);
+ if(!e)return;
+ if(e.status==="assigned"){
+  toast(`No se puede eliminar un ${noun} asignado`);
+  return;
+ }
+ askConfirm(`¿Eliminar el ${noun} ${id}?`,async()=>{
+  const rpcName=kind==="IMPLEMENTO"?"app_eliminar_implemento":"app_eliminar_equipo";
+  const {error}=await sb.rpc(rpcName,{p_token:customSessionToken,p_codigo:String(id)});
+  if(error){
+   const msg=customRpcError(error);
+   if(kind==="IMPLEMENTO"&&(String(error.code||"")==="PGRST202"||msg.includes("app_eliminar_implemento"))){
+    toast("Ejecuta primero el SQL V31 en Supabase");
+   }else toast(msg);
+   return;
+  }
+  await syncFromSupabase();
+  renderCatalog();
+  renderAll();
+  toast(kind==="IMPLEMENTO"?"Implemento eliminado":"Equipo eliminado");
+ });
+}
 
 
 /* INIT */
