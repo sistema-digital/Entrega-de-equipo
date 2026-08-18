@@ -673,11 +673,17 @@ input[type=text],input[type=date],input[type=password],textarea{min-height:46px;
 }
 
 
-/* PWA INSTALL */
+/* PWA V27 */
 .pwa-install-card{display:none}
 .pwa-install-card.show{display:block}
-#view-profile .pwa-install-card .profile-option-icon{color:#e30613}
-.standalone .pwa-install-card{display:none!important}
+.pwa-status-card{
+  margin:10px 0 0;padding:11px 12px;border-radius:10px;
+  background:#fff;border:1px solid #e4e7eb;font-size:10px;line-height:1.45;color:#5b6570
+}
+.pwa-status-card strong{color:#222}
+.pwa-status-ok{color:#0a7b52!important}
+.pwa-status-warn{color:#b36b00!important}
+html.pwa-standalone .pwa-install-card{display:none!important}
 
 </style>
 
@@ -688,14 +694,17 @@ input[type=text],input[type=date],input[type=password],textarea{min-height:46px;
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
-  <!-- PWA -->
-  <link rel="manifest" href="./manifest.webmanifest">
+  <!-- PWA V27 -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+  <meta name="theme-color" content="#e30613">
   <meta name="application-name" content="Entrega de Equipo">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Entrega Equipo">
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Entrega Equipo">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 </head>
 <body>
@@ -1158,11 +1167,14 @@ input[type=text],input[type=date],input[type=password],textarea{min-height:46px;
       </div>
       <div class="profile-menu">
 
-        <button class="pwa-install-card" id="pwaInstallCard" type="button" onclick="installPwa()">
+        <button class="pwa-install-card" id="pwaInstallCard" type="button" onclick="installPwaV27()">
           <span class="profile-option-icon"><i data-lucide="download" aria-hidden="true"></i></span>
           <strong>Instalar aplicación</strong>
-          <small>Agregar esta app al dispositivo.</small>
+          <small id="pwaInstallHint">Instalar en este dispositivo.</small>
         </button>
+        <div class="pwa-status-card" id="pwaStatusCard">
+          <strong>Estado PWA:</strong> comprobando…
+        </div>
 
         <button class="admin-only" onclick="go('users')">
           <span class="profile-option-icon"><i data-lucide="users-round" aria-hidden="true"></i></span>
@@ -5063,74 +5075,164 @@ async function uploadMovementPhotos(movementId,kind){
 
 
 /* ==========================================================
-   PWA V26
+   PWA V27 — INSTALACIÓN CORREGIDA
    ========================================================== */
-let deferredPwaPrompt=null;
+let deferredPwaPromptV27=null;
+let pwaSwReadyV27=false;
 
-function isStandalonePwa(){
+function isStandalonePwaV27(){
  return window.matchMedia("(display-mode: standalone)").matches
    || window.navigator.standalone===true;
 }
 
-function updatePwaInstallUI(){
+function isPwaSecureOriginV27(){
+ return location.protocol==="https:"
+   || location.hostname==="localhost"
+   || location.hostname==="127.0.0.1";
+}
+
+function pwaStatusTextV27(){
+ if(isStandalonePwaV27()) return {ok:true,text:"Aplicación instalada y ejecutándose en modo independiente."};
+
+ if(location.protocol==="file:"){
+  return {
+   ok:false,
+   text:"Esta página se abrió como archivo local (file://). Chrome/Edge no permiten instalar una PWA así. Usa INICIAR_PWA.bat o publícala por HTTPS."
+  };
+ }
+
+ if(!isPwaSecureOriginV27()){
+  return {
+   ok:false,
+   text:"La página no está usando HTTPS ni localhost. La instalación PWA está bloqueada por el navegador."
+  };
+ }
+
+ if(!("serviceWorker" in navigator)){
+  return {ok:false,text:"Este navegador no admite Service Worker."};
+ }
+
+ if(!pwaSwReadyV27){
+  return {ok:false,text:"Preparando Service Worker. Recarga la página una vez si acabas de publicar la app."};
+ }
+
+ if(deferredPwaPromptV27){
+  return {ok:true,text:"La aplicación está lista para instalar."};
+ }
+
+ return {
+  ok:true,
+  text:"PWA válida. Si Chrome/Edge no muestra todavía el botón nativo, usa el menú del navegador → Instalar aplicación, o vuelve a abrir esta página."
+ };
+}
+
+function updatePwaUiV27(){
  const card=document.getElementById("pwaInstallCard");
- const standalone=isStandalonePwa();
- document.documentElement.classList.toggle("standalone",standalone);
- if(!card)return;
- const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
- card.classList.toggle("show",!standalone && (!!deferredPwaPrompt || isiOS));
+ const hint=document.getElementById("pwaInstallHint");
+ const status=document.getElementById("pwaStatusCard");
+ const standalone=isStandalonePwaV27();
+
+ document.documentElement.classList.toggle("pwa-standalone",standalone);
+
+ if(card){
+  // Always show install help when not standalone, not only after beforeinstallprompt.
+  card.classList.toggle("show",!standalone);
+ }
+ if(hint){
+  if(location.protocol==="file:") hint.textContent="Abrir correctamente en localhost para instalar.";
+  else if(deferredPwaPromptV27) hint.textContent="Lista para instalar en este dispositivo.";
+  else hint.textContent="Comprobar instalación de la aplicación.";
+ }
+ if(status){
+  const st=pwaStatusTextV27();
+  status.innerHTML=`<strong>Estado PWA:</strong> <span class="${st.ok?"pwa-status-ok":"pwa-status-warn"}">${st.text}</span>`;
+ }
 }
 
 window.addEventListener("beforeinstallprompt",(event)=>{
  event.preventDefault();
- deferredPwaPrompt=event;
- updatePwaInstallUI();
+ deferredPwaPromptV27=event;
+ updatePwaUiV27();
 });
 
 window.addEventListener("appinstalled",()=>{
- deferredPwaPrompt=null;
- updatePwaInstallUI();
- toast("Aplicación instalada");
+ deferredPwaPromptV27=null;
+ updatePwaUiV27();
+ toast("Aplicación instalada correctamente");
 });
 
-async function installPwa(){
- if(isStandalonePwa()){
+async function installPwaV27(){
+ if(isStandalonePwaV27()){
   toast("La aplicación ya está instalada");
   return;
  }
 
- if(deferredPwaPrompt){
-  deferredPwaPrompt.prompt();
-  try{
-   await deferredPwaPrompt.userChoice;
-  }catch(e){}
-  deferredPwaPrompt=null;
-  updatePwaInstallUI();
+ if(location.protocol==="file:"){
+  toast("Para instalar, abre la app con INICIAR_PWA.bat o desde una dirección HTTPS");
+  updatePwaUiV27();
   return;
  }
 
+ if(!isPwaSecureOriginV27()){
+  toast("La PWA necesita HTTPS o localhost para poder instalarse");
+  updatePwaUiV27();
+  return;
+ }
+
+ if(deferredPwaPromptV27){
+  try{
+   deferredPwaPromptV27.prompt();
+   await deferredPwaPromptV27.userChoice;
+  }catch(e){}
+  deferredPwaPromptV27=null;
+  updatePwaUiV27();
+  return;
+ }
+
+ // If eligible but Chrome didn't emit the prompt, provide actionable in-app feedback.
  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
  if(isiOS){
-  toast("En iPhone/iPad usa Compartir y luego Añadir a pantalla de inicio");
+  toast("En iPhone/iPad: Compartir → Añadir a pantalla de inicio");
  }else{
-  toast("Usa la opción Instalar aplicación del menú del navegador");
+  toast("En Chrome/Edge abre el menú ⋮ y selecciona Instalar aplicación");
+ }
+ updatePwaUiV27();
+}
+
+async function registerPwaV27(){
+ updatePwaUiV27();
+
+ if(!("serviceWorker" in navigator) || !isPwaSecureOriginV27()){
+  updatePwaUiV27();
+  return;
+ }
+
+ try{
+  const reg=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
+  await navigator.serviceWorker.ready;
+  pwaSwReadyV27=true;
+  updatePwaUiV27();
+
+  // Update SW quietly.
+  setTimeout(()=>reg.update().catch(()=>{}),2000);
+ }catch(err){
+  console.warn("PWA Service Worker:",err);
+  pwaSwReadyV27=false;
+  updatePwaUiV27();
  }
 }
 
-if("serviceWorker" in navigator){
- window.addEventListener("load",async()=>{
-  try{
-   const reg=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
-   // Check quietly for a newer service worker after the app is loaded.
-   setTimeout(()=>reg.update().catch(()=>{}),3000);
-  }catch(err){
-   console.warn("Service Worker no registrado:",err);
-  }
- });
-}
+document.addEventListener("DOMContentLoaded",()=>{
+ updatePwaUiV27();
+ registerPwaV27();
+});
 
-document.addEventListener("DOMContentLoaded",updatePwaInstallUI);
-window.matchMedia("(display-mode: standalone)").addEventListener?.("change",updatePwaInstallUI);
+window.addEventListener("load",updatePwaUiV27);
+
+try{
+ window.matchMedia("(display-mode: standalone)")
+  .addEventListener("change",updatePwaUiV27);
+}catch(e){}
 
 
 /* INIT */
