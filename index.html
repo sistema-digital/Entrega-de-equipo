@@ -190,6 +190,8 @@ textarea{min-height:90px;resize:vertical}
 .timeline-card{background:#fff;border:1px solid #d2d2d2;border-radius:4px;padding:12px}
 .timeline-card strong{font-size:12px}
 .timeline-card p{margin:4px 0 0;color:#777;font-size:10px}
+.movement-actions{display:flex;justify-content:flex-end;margin-top:9px}
+.movement-actions button{border:1px solid #dbe2e9;background:#f7f9fb;color:#43576a;border-radius:8px;padding:8px 10px;font-size:9px;font-weight:800}
 
 
 /* ADMINISTRAR CATÁLOGOS: lógica en JavaScript */
@@ -2036,25 +2038,52 @@ function todayISO(){return new Date().toISOString().slice(0,10)}
 function makeId(){return Math.random().toString(16).slice(2,10)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__to);window.__to=setTimeout(()=>t.classList.remove("show"),2100)}
-const OVERDUE_NOTIFY_KEY="entrega_overdue_seen_v1";
+const OVERDUE_NOTIFY_KEY="entrega_overdue_seen_v2";
 let pendingConfirmAction=null;
+let editingLoanMovementIdV28=null;
+let editingLoanAssetClassV28=null;
+
 function loadSeenOverdue(){
  try{return JSON.parse(localStorage.getItem(OVERDUE_NOTIFY_KEY))||[]}catch(e){return []}
 }
 function saveSeenOverdue(ids){localStorage.setItem(OVERDUE_NOTIFY_KEY,JSON.stringify(ids))}
 function equipmentKey(e){return `${e.assetClass||"EQUIPO"}:${e.id}` }
+
+function parseLocalDateV28(value){
+ const m=String(value||"").match(/^(\d{4})-(\d{2})-(\d{2})/);
+ if(!m)return null;
+ const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+ return Number.isNaN(d.getTime())?null:d;
+}
+function localDayNumberV28(date){
+ return Math.floor(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/86400000);
+}
+function movementMatchesAssetV28(m,e){
+ return String(m?.equipmentId||"")===String(e?.id||"")
+  && String(m?.assetClass||"EQUIPO")===String(e?.assetClass||"EQUIPO");
+}
+function latestDeliveryForAssetV28(e){
+ return db.movements
+  .filter(m=>m.type==="delivery"&&movementMatchesAssetV28(m,e))
+  .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0))[0]||null;
+}
 function updateEquipmentDueStates(){
+ const today=new Date();
+ const todayDay=localDayNumberV28(today);
  db.equipment.forEach(e=>{
   if(e.status!=="assigned"){
    if(e.status==="available"){e.dueDays=null;e.dueDate=null}
    return;
   }
-  const lastDelivery=[...db.movements].reverse().find(m=>m.type==="delivery"&&m.equipmentId===e.id&&String(m.assetClass||"EQUIPO")===String(e.assetClass||"EQUIPO"));
+  const lastDelivery=latestDeliveryForAssetV28(e);
+  // activos.fecha_devolucion es la fuente principal del préstamo activo;
+  // formulario.fechaDevolucion queda como respaldo para registros antiguos.
   const dueSource=e.dueDate||lastDelivery?.form?.fechaDevolucion||null;
-  if(!dueSource){e.dueDays=null;return}
-  e.dueDate=dueSource;
-  const dueDate=new Date(`${dueSource}T23:59:59`);
-  e.dueDays=Math.ceil((dueDate-new Date())/86400000);
+  const dueDate=parseLocalDateV28(dueSource);
+  if(!dueDate){e.dueDays=null;return}
+  e.dueDate=String(dueSource).slice(0,10);
+  // Diferencia por día calendario: al comenzar el día siguiente ya está vencido.
+  e.dueDays=localDayNumberV28(dueDate)-todayDay;
  });
 }
 function getOverdueEquipment(){
@@ -2072,7 +2101,7 @@ function checkOverdueNotifications(){
  const seen=loadSeenOverdue();
  const fresh=ids.filter(id=>!seen.includes(id));
  if(fresh.length){
-  toast(fresh.length===1?"Hay 1 equipo vencido":`Hay ${fresh.length} equipos vencidos`);
+  toast(fresh.length===1?"Hay 1 activo vencido":`Hay ${fresh.length} activos vencidos`);
  }
  saveSeenOverdue(ids);
  updateNotificationDot();
@@ -2081,15 +2110,127 @@ function renderNotifications(){
  const box=document.getElementById("notificationsList");
  const rows=getOverdueEquipment();
  if(!rows.length){
-  box.innerHTML='<div class="empty-state">No hay equipos vencidos en este momento.</div>';
+  box.innerHTML='<div class="empty-state">No hay equipos ni implementos vencidos en este momento.</div>';
   refreshIcons();
   return;
  }
- box.innerHTML=rows.map(e=>`<div class="notification-item"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin responsable")}<br>${Math.abs(e.dueDays)} día(s) vencido(s).</small><span class="status overdue">VENCIDO</span></div>`).join("");
+ box.innerHTML=rows.map(e=>{
+  const due=e.dueDate?parseLocalDateV28(e.dueDate):null;
+  const dueText=due?due.toLocaleDateString("es-PA"):"Sin fecha";
+  return `<div class="notification-item"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin responsable")}<br>Venció: ${esc(dueText)} · ${Math.abs(e.dueDays)} día(s) vencido(s).</small><span class="status overdue">VENCIDO</span></div>`;
+ }).join("");
  refreshIcons();
 }
 function openNotifications(){renderNotifications();document.getElementById("notificationsModal").classList.add("open")}
 function closeNotifications(){document.getElementById("notificationsModal").classList.remove("open")}
+function formatMovementDateForInputV28(value){
+ try{
+  const d=new Date(value);
+  const parts=new Intl.DateTimeFormat("en-CA",{
+   timeZone:"America/Panama",year:"numeric",month:"2-digit",day:"2-digit"
+  }).formatToParts(d);
+  const map=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+  return `${map.year}-${map.month}-${map.day}`;
+ }catch(e){return String(value||"").slice(0,10)}
+}
+function clearLoanEditModeV28(){
+ editingLoanMovementIdV28=null;
+ editingLoanAssetClassV28=null;
+ const eqTrigger=document.getElementById("numeroEquipoTrigger");
+ const imTrigger=document.getElementById("implementNumeroTrigger");
+ if(eqTrigger)eqTrigger.disabled=false;
+ if(imTrigger)imTrigger.disabled=false;
+}
+function openLoanEditorV28(movementId){
+ if(!requireAdmin())return;
+ const m=db.movements.find(x=>String(x.id)===String(movementId));
+ if(!m||m.type!=="delivery"){
+  toast("No se encontró el préstamo para editar");
+  return;
+ }
+ const kind=String(m.assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ editingLoanMovementIdV28=m.id;
+ editingLoanAssetClassV28=kind;
+ const currentAsset=db.equipment.find(e=>String(e.id)===String(m.equipmentId)&&String(e.assetClass||"EQUIPO").toUpperCase()===kind);
+ const base={...(m.form||{})};
+ base.numeroEquipo=String(m.equipmentId||base.numeroEquipo||"");
+ base.finca=m.finca||base.finca||"";
+ base.fechaEntrega=base.fechaEntrega||formatMovementDateForInputV28(m.date);
+ if(!base.fechaDevolucion&&currentAsset?.status==="assigned")base.fechaDevolucion=currentAsset.dueDate||"";
+ if(!base.recibidoOperador&&!base.recibidoPorCampo&&m.operator)base.recibidoOperador=m.operator;
+
+ if(kind==="IMPLEMENTO"){
+  resetImplementForm();
+  applyImplementDraft(base);
+  go("implement");
+  const trigger=document.getElementById("implementNumeroTrigger");
+  if(trigger)trigger.disabled=true;
+  document.getElementById("appTitle").textContent="EDITAR PRÉSTAMO · IMPLEMENTO";
+  setImplementStep(0);
+ }else{
+  resetForm();
+  applyEquipmentDraft(base);
+  go("delivery");
+  const trigger=document.getElementById("numeroEquipoTrigger");
+  if(trigger)trigger.disabled=true;
+  document.getElementById("appTitle").textContent="EDITAR PRÉSTAMO · EQUIPO";
+  setStep(0);
+ }
+ toast("Modo edición: solo administradores pueden guardar cambios");
+}
+async function saveEditedLoanV28(kind){
+ if(!editingLoanMovementIdV28||!requireAdmin()||!customSessionToken)return;
+ const isImplement=kind==="IMPLEMENTO";
+ const steps=isImplement?4:5;
+ for(let i=0;i<steps;i++){
+  const ok=isImplement?validateImplementStep(i):validateStep(i);
+  if(!ok){
+   isImplement?setImplementStep(i):setStep(i);
+   return;
+  }
+ }
+ const roles=isImplement
+  ?["implementTaller","implementCampo","implementOperador"]
+  :["taller","campo","operador"];
+ const missing=roles.find(role=>!roleSignatureData(role));
+ if(missing){
+  isImplement?setImplementStep(3):setStep(4);
+  const label=missing.toLowerCase().includes("taller")?"Personal de Taller":missing.toLowerCase().includes("campo")?"Personal de Campo":"Operador";
+  toast("Falta la firma de: "+label);
+  return;
+ }
+ const d=isImplement?collectImplementForm():collectForm();
+ d.firmaTaller=roleSignatureData(roles[0]);
+ d.firmaCampo=roleSignatureData(roles[1]);
+ d.firmaOperador=roleSignatureData(roles[2]);
+ const assigned=d.recibidoOperador||d.recibidoPorCampo||"Personal de campo";
+ await Promise.all(roles.map(role=>saveRoleSignatureByName(role)));
+ const movementId=editingLoanMovementIdV28;
+ const {error}=await sb.rpc("app_admin_editar_entrega",{
+  p_token:customSessionToken,
+  p_movimiento_id:movementId,
+  p_fecha_entrega:d.fechaEntrega||null,
+  p_fecha_devolucion:d.fechaDevolucion||null,
+  p_finca:d.finca||null,
+  p_asignado_a:assigned,
+  p_formulario:d,
+  p_codigo_formulario:d.id||null
+ });
+ if(error){
+  const msg=customRpcError(error);
+  if(/app_admin_editar_entrega|schema cache|function/i.test(msg)){
+   toast("Falta ejecutar el SQL de edición de préstamos en Supabase");
+  }else toast(msg);
+  return;
+ }
+ const warnings=await uploadMovementPhotos(movementId,kind);
+ clearLoanEditModeV28();
+ isImplement?resetImplementForm():resetForm();
+ await syncFromSupabase();
+ renderAll();
+ go("history");
+ toast(warnings?"Préstamo actualizado; alguna foto no pudo subir":"Préstamo actualizado correctamente");
+}
 function askConfirm(message,onConfirm){
  pendingConfirmAction=typeof onConfirm==="function"?onConfirm:null;
  document.getElementById("confirmModalMessage").textContent=message;
@@ -2351,6 +2492,9 @@ function titleFor(view){
  return map[view]||"ENTREGA DE EQUIPO";
 }
 function go(view,btn){
+ if(editingLoanMovementIdV28 && (currentView==="delivery"||currentView==="implement") && view!==currentView){
+  clearLoanEditModeV28();
+ }
  if((view==="catalog"||view==="users")&&!isAdmin()){
   toast("Acceso exclusivo para administrador");
   view="home";
@@ -2553,7 +2697,13 @@ function renderDashboard(){
  document.getElementById("kpiAvailable").textContent=available;
  document.getElementById("kpiToday").textContent=today;
  document.getElementById("kpiOverdue").textContent=overdue;
- document.getElementById("homeEquipment").innerHTML=db.equipment.slice(0,3).map(e=>equipmentCard(e)).join("");
+ const upcoming=db.equipment
+  .filter(e=>e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays>=0)
+  .sort((a,b)=>(a.dueDays-b.dueDays)||String(a.id).localeCompare(String(b.id),undefined,{numeric:true}))
+  .slice(0,3);
+ document.getElementById("homeEquipment").innerHTML=upcoming.length
+  ?upcoming.map(e=>equipmentCard(e)).join("")
+  :`<div class="card"><div class="card-body" style="text-align:center;color:#888">No hay equipos o implementos próximos a vencer.</div></div>`;
  refreshIcons();
 }
 function equipmentCard(e){
@@ -2564,7 +2714,7 @@ function equipmentCard(e){
  const safeId=String(e.id).replace(/'/g,"\'");
  const stateText=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
  const detail=e.status==="assigned"
-   ? (overdue?`${Math.abs(e.dueDays)} días vencidos`:(typeof e.dueDays==="number"?`${e.dueDays} días restantes`:esc(e.finca||"Asignado")))
+   ? (overdue?`${Math.abs(e.dueDays)} días vencidos`:(typeof e.dueDays==="number"?(e.dueDays===0?"Vence hoy":`${e.dueDays} días restantes`):esc(e.finca||"Asignado")))
    : `${esc(e.id)} · ${esc(e.type)}`;
  const adminActions=(kind==="EQUIPO"&&isAdmin())?`
    <div class="equipment-card-actions">
@@ -2611,10 +2761,15 @@ function renderReturns(){
 function renderHistory(){
  const q=(document.getElementById("historySearch")?.value||"").toLowerCase();
  const rows=[...db.movements].sort((a,b)=>new Date(b.date)-new Date(a.date)).filter(m=>`${m.type} ${m.equipmentId} ${m.finca||""} ${m.operator||""}`.toLowerCase().includes(q));
- document.getElementById("historyList").innerHTML=rows.length?rows.map(m=>`
-  <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><strong>${m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN"} · ${esc(m.equipmentId)}</strong><p>${esc(m.assetClass||db.equipment.find(e=>e.id===m.equipmentId && e.assetClass==="EQUIPO")?.assetClass||"EQUIPO")} · ${new Date(m.date).toLocaleString("es-PA")} · ${esc(m.finca||"")} ${m.operator?"· "+esc(m.operator):""}</p></div></div>
- `).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">Sin movimientos.</div></div>`;
+ document.getElementById("historyList").innerHTML=rows.length?rows.map(m=>{
+  const safeMovementId=String(m.id||"").replace(/'/g,"\\'");
+  const editAction=(m.type==="delivery"&&isAdmin())
+   ?`<div class="movement-actions"><button type="button" onclick="openLoanEditorV28('${safeMovementId}')">EDITAR PRÉSTAMO</button></div>`
+   :"";
+  return `<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><strong>${m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN"} · ${esc(m.equipmentId)}</strong><p>${esc(m.assetClass||db.equipment.find(e=>e.id===m.equipmentId && e.assetClass==="EQUIPO")?.assetClass||"EQUIPO")} · ${new Date(m.date).toLocaleString("es-PA")} · ${esc(m.finca||"")} ${m.operator?"· "+esc(m.operator):""}</p>${editAction}</div></div>`;
+ }).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">Sin movimientos.</div></div>`;
 }
+
 
 function showEquipment(id,assetClass){
  const e=db.equipment.find(x=>x.id===id && x.assetClass===assetClass);if(!e)return;
@@ -2636,7 +2791,9 @@ function openReturn(id,assetClass){
  document.getElementById("returnCondition").value="";
  document.querySelectorAll('[data-name="returnCondition"] .choice').forEach(b=>b.classList.remove("active"));
  document.getElementById("returnNotes").value="";
- document.getElementById("returnModalInfo").innerHTML=`<div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"")}</small></div></div>`;
+ const activeDelivery=latestDeliveryForAssetV28(e);
+ const editLoanButton=(isAdmin()&&activeDelivery)?`<div class="movement-actions"><button type="button" onclick="closeReturnModal();openLoanEditorV28('${String(activeDelivery.id).replace(/'/g,"\\'")}')">EDITAR PRÉSTAMO</button></div>`:"";
+ document.getElementById("returnModalInfo").innerHTML=`<div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"")}</small></div></div>${editLoanButton}`;
  document.getElementById("returnModal").classList.add("open");
  refreshIcons();
 }
@@ -2676,7 +2833,7 @@ function setImplementStep(s){
  document.querySelectorAll(".implement-step").forEach((x,i)=>x.classList.toggle("active",i===currentImplementStep));
  document.querySelectorAll(".implement-step-pill").forEach((x,i)=>x.classList.toggle("active",i===currentImplementStep));
  document.getElementById("implementPrevBtn").style.visibility=currentImplementStep===0?"hidden":"visible";
- document.getElementById("implementNextBtn").textContent=currentImplementStep===3?"GUARDAR":"SIGUIENTE";
+ document.getElementById("implementNextBtn").textContent=currentImplementStep===3?(editingLoanMovementIdV28?"ACTUALIZAR":"GUARDAR"):"SIGUIENTE";
  document.querySelectorAll(".implement-step-pill")[currentImplementStep]?.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
  window.scrollTo({top:0,behavior:"smooth"});
  if(currentImplementStep===3){
@@ -2825,7 +2982,7 @@ function setStep(s){
  document.querySelectorAll(".form-step").forEach((x,i)=>x.classList.toggle("active",i===currentStep));
  document.querySelectorAll(".step-pill").forEach((x,i)=>x.classList.toggle("active",i===currentStep));
  document.getElementById("prevBtn").style.visibility=currentStep===0?"hidden":"visible";
- document.getElementById("nextBtn").textContent=currentStep===4?"GUARDAR":"SIGUIENTE";
+ document.getElementById("nextBtn").textContent=currentStep===4?(editingLoanMovementIdV28?"ACTUALIZAR":"GUARDAR"):"SIGUIENTE";
  document.querySelectorAll(".step-pill")[currentStep]?.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
  window.scrollTo({top:0,behavior:"smooth"});
  if(currentStep===4){
@@ -4131,6 +4288,7 @@ async function confirmReturn(){
 }
 
 async function saveImplementForm(){
+ if(editingLoanMovementIdV28)return saveEditedLoanV28("IMPLEMENTO");
  for(let i=0;i<4;i++){
   if(!validateImplementStep(i)){
    setImplementStep(i);
@@ -4197,6 +4355,7 @@ async function saveImplementForm(){
 }
 
 async function saveForm(){
+ if(editingLoanMovementIdV28)return saveEditedLoanV28("EQUIPO");
  for(let i=0;i<5;i++){
   if(!validateStep(i)){
    setStep(i);
@@ -4319,12 +4478,14 @@ async function saveRoleSignatureByName(role){
 }
 
 function saveDraft(){
+ if(editingLoanMovementIdV28)return;
  const data=collectForm();
  localStorage.setItem(DRAFT_KEY,JSON.stringify(data));
  scheduleCloudDraft("EQUIPO",data);
 }
 
 function saveImplementDraft(){
+ if(editingLoanMovementIdV28)return;
  const data=collectImplementForm();
  localStorage.setItem(IMPLEMENT_DRAFT_KEY,JSON.stringify(data));
  scheduleCloudDraft("IMPLEMENTO",data);
@@ -5073,6 +5234,21 @@ async function uploadMovementPhotos(movementId,kind){
 }
 
 
+
+/* V28 — refresco automático de vencimientos mientras la app permanece abierta */
+function refreshDueNotificationsV28(){
+ if(!currentUser)return;
+ updateEquipmentDueStates();
+ updateNotificationDot();
+ if(currentView==="home")renderDashboard();
+ if(document.getElementById("notificationsModal")?.classList.contains("open"))renderNotifications();
+ checkOverdueNotifications();
+}
+if(!window.__dueNotificationTimerV28){
+ window.__dueNotificationTimerV28=setInterval(refreshDueNotificationsV28,60000);
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshDueNotificationsV28()});
+ window.addEventListener("focus",refreshDueNotificationsV28);
+}
 
 /* ==========================================================
    PWA V27 — INSTALACIÓN CORREGIDA
