@@ -684,6 +684,157 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 }
 .history-main-date span{font-size:8px;font-weight:800;color:#8a929d;letter-spacing:.35px}
 .history-main-date b{font-size:11px;color:#20252d;text-align:right}
+
+
+/* V32 — DETALLE DE ACTIVO ASIGNADO + HISTORIAL INTEGRADO */
+.asset-detail-page{padding-top:10px}
+.asset-detail-hero{background:#fff;border:1px solid #edf0f3;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px}
+.asset-detail-top{display:grid;grid-template-columns:78px minmax(0,1fr);gap:13px;align-items:center;padding:14px}
+.asset-detail-photo{width:78px;height:78px;border-radius:12px;background:#f0f3f6;display:grid;place-items:center;overflow:hidden;color:#68727e}
+.asset-detail-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.asset-detail-photo .lucide{width:35px;height:35px;stroke-width:1.6}
+.asset-detail-title{min-width:0}.asset-detail-title h2{font-size:18px;line-height:1.15;margin:0;color:#1b2028}.asset-detail-title p{font-size:10px;color:#7d8792;margin:5px 0 0}
+.asset-detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 14px}
+.asset-detail-actions button{min-height:44px;border-radius:10px;font-size:10px;font-weight:800}
+.asset-detail-return{border:1px solid var(--red);background:var(--red);color:#fff}.asset-detail-edit{border:1px solid #d9e0e7;background:#f8fafb;color:#3f5569}
+.asset-detail-section{background:#fff;border:1px solid #edf0f3;border-radius:14px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.asset-detail-section-head{padding:13px 14px 10px;border-bottom:1px solid #f0f2f4;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.asset-detail-section-head h3{font-size:13px;margin:0}.asset-detail-section-head small{font-size:9px;color:#8a929d}
+.asset-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:4px 14px 10px}
+.asset-detail-field{padding:10px 8px 9px 0;border-bottom:1px solid #f1f3f5;min-width:0}.asset-detail-field:nth-child(even){padding-left:8px;padding-right:0}
+.asset-detail-field span{display:block;font-size:8px;color:#929aa5;font-weight:800;letter-spacing:.25px;margin-bottom:4px;text-transform:uppercase}.asset-detail-field b{display:block;font-size:11px;color:#242a32;line-height:1.3;word-break:break-word}
+.asset-detail-note{margin:0 14px 13px;padding:11px 12px;background:#f7f8fa;border:1px solid #edf0f3;border-radius:10px;font-size:10px;color:#5f6874;line-height:1.45;white-space:pre-wrap}
+.asset-inspection-list{padding:5px 14px 11px}.asset-inspection-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #f2f3f5}.asset-inspection-row:last-child{border-bottom:0}.asset-inspection-row span{font-size:9.5px;color:#626c78;line-height:1.35}.asset-inspection-row b{font-size:9px;border-radius:999px;background:#f0f3f6;padding:5px 7px;white-space:nowrap;color:#39434e}
+.asset-history-wrap{padding:12px 14px 5px}.asset-history-item{position:relative;padding:0 0 14px 23px}.asset-history-item:before{content:"";position:absolute;left:6px;top:12px;bottom:-4px;width:2px;background:#e2e6ea}.asset-history-item:last-child:before{display:none}.asset-history-dot{position:absolute;left:1px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px #fff}.asset-history-card{border:1px solid #edf0f3;border-radius:11px;background:#fff;overflow:hidden}.asset-history-main{padding:11px 12px}.asset-history-main strong{display:block;font-size:11px;color:#242a32}.asset-history-main small{display:block;margin-top:4px;font-size:9px;color:#858e99;line-height:1.4}
+.asset-history-card details{border-top:1px solid #f0f2f4}.asset-history-card summary{cursor:pointer;list-style:none;padding:9px 12px;font-size:9px;font-weight:800;color:#536170;background:#fafbfc}.asset-history-card summary::-webkit-details-marker{display:none}.asset-history-card details[open] summary{color:var(--red)}.asset-history-details{padding:4px 12px 11px;background:#fafbfc}.asset-history-details .asset-detail-grid{padding:0;grid-template-columns:1fr 1fr}.asset-history-details .asset-detail-note{margin:8px 0 0}
+.asset-detail-empty{padding:18px 14px;text-align:center;color:#8a929d;font-size:11px}
+@media(max-width:360px){.asset-detail-grid{grid-template-columns:1fr}.asset-detail-field:nth-child(even){padding-left:0}.asset-detail-actions{grid-template-columns:1fr}}
+
+
+
+/* V33 — GALERÍA DE IMÁGENES EN DETALLES */
+.asset-photo-block{padding:0 14px 14px}
+.asset-photo-block.compact{padding:10px 0 0}
+.asset-photo-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 8px}
+.asset-photo-title strong{font-size:10px;color:#343b45}.asset-photo-title small{font-size:8.5px;color:#8a929d}
+.asset-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.asset-photo-thumb{border:1px solid #e6eaee;background:#fff;border-radius:11px;overflow:hidden;padding:0;text-align:left;box-shadow:0 2px 7px rgba(22,34,51,.05)}
+.asset-photo-thumb .asset-photo-image{display:block;width:100%;aspect-ratio:4/3;background:#eef1f4;overflow:hidden}
+.asset-photo-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.asset-photo-thumb span{display:block;padding:7px 8px;font-size:8.5px;color:#59636f;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.asset-detail-photo.has-photo{cursor:pointer;position:relative}
+.asset-detail-photo.has-photo:after{content:'⌕';position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.62);color:#fff;font-size:13px}
+.photo-viewer-v33{position:fixed;inset:0;z-index:320;background:rgba(7,10,14,.93);display:none;align-items:center;justify-content:center;padding:18px}
+.photo-viewer-v33.open{display:flex}
+.photo-viewer-card-v33{width:min(100%,900px);max-height:94vh;display:flex;flex-direction:column;gap:10px}
+.photo-viewer-head-v33{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.photo-viewer-head-v33 strong{font-size:12px;line-height:1.3}
+.photo-viewer-head-v33 button{width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:24px}
+.photo-viewer-image-v33{display:block;max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;transition:transform .12s ease}
+/* V35 — ZOOM Y DESPLAZAMIENTO DE IMÁGENES */
+.photo-viewer-card-v33{height:min(94vh,900px);min-height:320px}
+.photo-viewer-toolbar-v35{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.photo-viewer-toolbar-v35 button{width:42px;height:42px;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.12);color:#fff;font-size:20px;font-weight:800;display:grid;place-items:center}
+.photo-viewer-toolbar-v35 button:active{background:rgba(255,255,255,.22)}
+.photo-viewer-zoom-v35{min-width:62px;text-align:center;color:#fff;font-size:11px;font-weight:800}
+.photo-viewer-stage-v35{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:12px;background:#111;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+.photo-viewer-stage-v35.is-dragging{cursor:grabbing}
+.photo-viewer-help-v35{text-align:center;color:rgba(255,255,255,.72);font-size:9px;line-height:1.35}
+@media(max-width:480px){.photo-viewer-v33{padding:10px}.photo-viewer-card-v33{height:92vh}.photo-viewer-toolbar-v35 button{width:44px;height:44px}.photo-viewer-help-v35{font-size:8.5px}}
+.asset-photo-empty{padding:10px 12px;border:1px dashed #dfe4e9;border-radius:10px;background:#fafbfc;color:#8a929d;font-size:9px;text-align:center}
+@media(min-width:700px){.asset-photo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* V34 — galería visible dentro de detalles */
+.asset-photo-empty{display:flex;align-items:center;justify-content:center;gap:7px;min-height:72px}
+.asset-photo-empty .lucide{width:18px;height:18px;stroke-width:1.7}
+.asset-photo-grid{margin-top:2px}
+.asset-photo-thumb{cursor:pointer}
+.asset-photo-thumb:active{transform:scale(.985)}
+.asset-photo-thumb.photo-error-v34{display:none}
+.asset-detail-section .asset-photo-block{margin-top:12px;padding:12px 0 0;border-top:1px solid #eef1f4}
+.asset-detail-section .asset-photo-block.compact{margin-top:10px}
+
+
+/* V36 — CONSULTA BAJO DEMANDA / AHORRO DE EGRESS */
+.asset-photo-title-actions{display:flex;align-items:center;gap:8px}
+.asset-photo-view-btn{min-width:58px;height:34px;border:0;border-radius:9px;background:var(--red);color:#fff;font-size:9px;font-weight:900;padding:0 12px}
+.asset-photo-view-btn:disabled{opacity:.55;cursor:default}
+.asset-photo-status{display:flex;align-items:center;justify-content:center;gap:7px;min-height:58px;padding:10px 12px;border:1px dashed #dfe4e9;border-radius:10px;background:#fafbfc;color:#8a929d;font-size:9px;text-align:center}
+.asset-detail-loading-v36{padding:22px 14px;text-align:center;color:#7e8793;font-size:11px}
+.asset-detail-loading-v36 .spinner-v36{width:25px;height:25px;border:3px solid #eceff2;border-top-color:var(--red);border-radius:50%;margin:0 auto 9px;animation:spinV36 .8s linear infinite}
+@keyframes spinV36{to{transform:rotate(360deg)}}
+
+
+
+/* V37 — 4 fotografías obligatorias en la devolución */
+.return-modal-card-v37{max-height:92vh;overflow-y:auto}
+.return-photo-grid-v37{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.return-photo-grid-v37 .photo-card{margin:0}
+.return-photo-grid-v37 .photo-label{font-size:9px;line-height:1.25;min-height:23px}
+.return-photo-grid-v37 .photo-box{min-height:112px;border-radius:10px;overflow:hidden;background:#fafbfc}
+.return-photo-grid-v37 .photo-box img{height:112px;object-fit:cover}
+.return-photo-grid-v37 .photo-placeholder{padding:8px;font-size:8.5px;line-height:1.25}
+.return-photo-grid-v37 .photo-placeholder span{font-size:23px;margin-bottom:4px}
+.return-photo-help-v37{font-size:9px;color:#818a96;line-height:1.35;margin:7px 1px 0}
+@media(max-width:340px){.return-photo-grid-v37{grid-template-columns:1fr}}
+
+
+
+/* ==========================================================
+   V39 — HISTORIAL POR EQUIPO / CONSULTA BAJO DEMANDA
+   ========================================================== */
+.history-search-page-v39{padding-top:14px}
+.history-search-card-v39{background:#fff;border:1px solid #edf0f3;border-radius:14px;padding:15px;box-shadow:var(--shadow)}
+.history-search-card-v39 h2{font-size:16px;margin:0 0 5px;color:#20252d}
+.history-search-card-v39 p{font-size:10px;line-height:1.45;color:#87909b;margin:0 0 13px}
+.history-search-form-v39{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.history-search-form-v39 input{width:100%;min-width:0;height:46px;border:1px solid #dfe4ea;border-radius:10px;background:#fff;padding:0 12px;font-size:16px;outline:none}
+.history-search-form-v39 input:focus{border-color:#e30613;box-shadow:0 0 0 3px rgba(227,6,19,.08)}
+.history-search-btn-v39{height:46px;border:0;border-radius:10px;background:var(--red);color:#fff;padding:0 16px;font-size:10px;font-weight:900;display:flex;align-items:center;gap:7px}
+.history-search-btn-v39:disabled{opacity:.55;cursor:default}
+.history-search-btn-v39 svg{width:17px;height:17px}
+.history-query-note-v39{margin-top:10px;display:flex;align-items:flex-start;gap:7px;color:#8a929c;font-size:9px;line-height:1.35}
+.history-query-note-v39 svg{width:15px;height:15px;flex:0 0 auto;margin-top:1px}
+.history-result-v39{margin-top:12px}
+.history-empty-v39{background:#fff;border:1px dashed #dfe4ea;border-radius:12px;padding:22px 14px;text-align:center;color:#89929d;font-size:11px;line-height:1.45}
+.history-empty-v39 svg{width:28px;height:28px;margin:0 auto 8px;color:#a6adb6}
+.history-asset-card-v39{width:100%;border:1px solid #edf0f3;background:#fff;border-radius:12px;padding:11px;display:grid;grid-template-columns:48px minmax(0,1fr) 22px;gap:10px;align-items:center;text-align:left;box-shadow:var(--shadow)}
+.history-asset-card-v39:active{transform:scale(.99)}
+.history-asset-icon-v39{width:48px;height:48px;border-radius:10px;background:#f2f4f7;display:grid;place-items:center;color:#5f6975}
+.history-asset-icon-v39 svg{width:25px;height:25px}
+.history-asset-copy-v39{min-width:0}
+.history-asset-copy-v39 strong{display:block;font-size:13px;color:#20252d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-asset-copy-v39 small{display:block;margin-top:4px;font-size:9px;line-height:1.35;color:#858e99}
+.history-asset-copy-v39 .history-count-v39{display:inline-flex;margin-top:7px;padding:4px 7px;border-radius:999px;background:#f1f4f7;color:#58636f;font-size:8px;font-weight:800}
+.history-asset-chevron-v39{color:#727c88;display:grid;place-items:center}
+.history-asset-chevron-v39 svg{width:18px;height:18px}
+.history-detail-page-v39{padding-top:12px;padding-bottom:24px}
+.history-detail-hero-v39{background:#fff;border:1px solid #edf0f3;border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+.history-detail-hero-v39 h2{font-size:17px;margin:0;color:#20252d}
+.history-detail-hero-v39 p{font-size:10px;color:#858e99;margin:5px 0 0;line-height:1.4}
+.history-detail-summary-v39{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.history-detail-summary-v39 span{padding:5px 8px;border-radius:999px;background:#f3f5f7;color:#5e6874;font-size:8px;font-weight:800}
+.history-list-v39{position:relative;padding-left:18px}
+.history-list-v39:before{content:"";position:absolute;left:5px;top:10px;bottom:12px;width:2px;background:#e4e8ed}
+.history-movement-v39{position:relative;background:#fff;border:1px solid #edf0f3;border-radius:12px;padding:13px;margin-bottom:10px;box-shadow:var(--shadow)}
+.history-movement-v39:before{content:"";position:absolute;left:-18px;top:18px;width:11px;height:11px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px var(--bg)}
+.history-movement-head-v39{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding-bottom:10px;border-bottom:1px solid #f0f2f4;margin-bottom:11px}
+.history-movement-head-v39 strong{font-size:11px;color:#20252d}
+.history-movement-head-v39 small{display:block;font-size:8.5px;color:#8b939d;margin-top:4px}
+.history-movement-type-v39{flex:0 0 auto;padding:5px 7px;border-radius:999px;font-size:7.5px;font-weight:900;background:#eef3f8;color:#526170}
+.history-movement-type-v39.delivery{background:#e9f2ff;color:#1f6fbd}
+.history-movement-type-v39.return{background:#e9f7f1;color:#087b58}
+.history-inspection-v39{margin-top:10px;border-top:1px solid #f0f2f4;padding-top:10px}
+.history-inspection-v39 h4{font-size:9px;margin:0 0 7px;color:#68727d;text-transform:uppercase;letter-spacing:.25px}
+.history-loading-v39{display:flex;align-items:center;justify-content:center;gap:9px;padding:22px;color:#7e8792;font-size:10px}
+.history-spinner-v39{width:18px;height:18px;border:2px solid #e1e5ea;border-top-color:var(--red);border-radius:50%;animation:historySpinV39 .75s linear infinite}
+@keyframes historySpinV39{to{transform:rotate(360deg)}}
+@media(max-width:360px){.history-search-form-v39{grid-template-columns:1fr}.history-search-btn-v39{justify-content:center;width:100%}}
+
+
+/* V42 — Labor visible en tarjetas de activos asignados */
+.equip-labor-v41{display:block;margin-top:4px;color:#4f5b68;font-size:8.8px;font-weight:800;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
+.damage-photo-v42{margin-top:12px;margin-bottom:0}.damage-photo-v42 .photo-label{color:#4f5966}.damage-photo-v42 .photo-box{border-color:#efb8bc;background:#fffafa}
 </style>
 
 <!-- Iconos Lucide: mismo lenguaje visual lineal de la referencia -->
@@ -802,6 +953,10 @@ html.pwa-standalone .pwa-install-card{display:none!important}
               </div>
               <input id="finca" name="finca" type="hidden" required>
             </div>
+            <div class="field">
+              <label class="req">LABOR</label>
+              <input id="labor" name="labor" type="text" required placeholder="Ej. Transporte de caña, preparación de tierra...">
+            </div>
             <input id="assetClass" name="assetClass" type="hidden" value="EQUIPO" required>
             <div class="field">
               <label class="req">NUMERO DE EQUIPO</label>
@@ -851,7 +1006,18 @@ html.pwa-standalone .pwa-install-card{display:none!important}
                 <button class="choice" type="button" data-value="NO">NO</button>
               </div>
               <input id="tieneDanos" name="tieneDanos" type="hidden" required>
-              <div class="damage-extra" id="damageExtra"><label>DETALLE DEL DAÑO</label><textarea id="detalleDanos" name="detalleDanos"></textarea></div>
+              <div class="damage-extra" id="damageExtra">
+                <label>DETALLE DEL DAÑO</label>
+                <textarea id="detalleDanos" name="detalleDanos" placeholder="Describa brevemente el daño encontrado..."></textarea>
+                <div class="photo-card damage-photo-v42" id="damagePhotoCardV42">
+                  <div class="photo-label">FOTO DONDE SE MUESTRE EL DAÑO <span style="color:var(--red)">*</span></div>
+                  <div class="photo-box">
+                    <input id="damagePhotoInput" type="file" accept="image/*" capture="environment" data-photo="dano">
+                    <img alt="Foto del daño">
+                    <div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO DEL DAÑO</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -970,6 +1136,10 @@ html.pwa-standalone .pwa-install-card{display:none!important}
               <input id="implementFinca" name="finca" type="hidden" required>
             </div>
             <div class="field">
+              <label class="req">LABOR</label>
+              <input id="implementLabor" name="labor" type="text" required placeholder="Ej. Transporte, apoyo de campo, preparación...">
+            </div>
+            <div class="field">
               <label class="req">REFERENCIA / NÚMERO DE IMPLEMENTO</label>
               <button class="picker-trigger empty" id="implementNumeroTrigger" type="button" onclick="openPicker('implemento')">
                 <span>Seleccione un implemento</span><span>▼</span>
@@ -1002,6 +1172,16 @@ html.pwa-standalone .pwa-install-card{display:none!important}
                 <button class="choice" type="button" data-value="NO">NO</button>
               </div>
               <input id="implementTieneDanos" name="tieneDanos" type="hidden" required>
+              <div class="damage-extra" id="implementDamageExtraV42">
+                <div class="photo-card damage-photo-v42" id="implementDamagePhotoCardV42">
+                  <div class="photo-label">FOTO DONDE SE MUESTRE EL DAÑO <span style="color:var(--red)">*</span></div>
+                  <div class="photo-box">
+                    <input id="implementDamagePhotoInput" type="file" accept="image/*" capture="environment" data-implement-photo="dano">
+                    <img alt="Foto del daño del implemento">
+                    <div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO DEL DAÑO</div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="field"><label>OBSERVACIÓN / DETALLE</label><textarea id="implementObservacion" name="observacion" placeholder="Estado, daños o comentarios del implemento..."></textarea></div>
           </div>
@@ -1099,10 +1279,30 @@ html.pwa-standalone .pwa-install-card{display:none!important}
     <div class="page" style="padding-top:0"><div class="list" id="equipmentList"></div></div>
   </section>
 
-  <!-- HISTORIAL -->
+
+
+  <!-- V32 DETALLE DEL ACTIVO -->
+  <section class="view" id="view-assetDetail">
+    <div class="page asset-detail-page" id="assetDetailContent"></div>
+  </section>
+
+  <!-- HISTORIAL V39 — consulta solamente al pulsar BUSCAR -->
   <section class="view" id="view-history">
-    <div class="search-row"><input class="searchbox" id="historySearch" placeholder="Buscar movimiento..." oninput="renderHistory()"></div>
-    <div class="timeline" id="historyList"></div>
+    <div class="page history-search-page-v39">
+      <div class="history-search-card-v39">
+        <h2>Buscar historial por equipo</h2>
+        <form class="history-search-form-v39" id="historySearchFormV39" onsubmit="event.preventDefault();searchAssetHistoryV39()">
+          <input id="historySearch" type="text" inputmode="text" autocomplete="off" placeholder="Ej. 484104" aria-label="Número del equipo">
+          <button class="history-search-btn-v39" id="historySearchBtnV39" type="submit"><i data-lucide="search" aria-hidden="true"></i> BUSCAR</button>
+        </form>
+      </div>
+      <div class="history-result-v39" id="historyList"></div>
+    </div>
+  </section>
+
+  <!-- DETALLE DE HISTORIAL DE UN ACTIVO V39 -->
+  <section class="view" id="view-historyDetail">
+    <div class="page history-detail-page-v39" id="historyDetailContentV39"></div>
   </section>
 
 
@@ -1234,7 +1434,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 
 <!-- MODAL DEVOLUCION -->
 <div class="modal" id="returnModal">
-  <div class="modal-card">
+  <div class="modal-card return-modal-card-v37">
     <div class="modal-head"><h3>Registrar devolución</h3><button onclick="closeReturnModal()">×</button></div>
     <div id="returnModalInfo"></div>
     <div class="field" style="margin-top:12px">
@@ -1248,7 +1448,39 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       <input id="returnCondition" type="hidden">
     </div>
     <div class="field"><label>OBSERVACIÓN</label><textarea id="returnNotes"></textarea></div>
-    <div class="modal-actions"><button class="secondary" onclick="closeReturnModal()">CANCELAR</button><button class="primary" onclick="confirmReturn()">CONFIRMAR</button></div>
+
+    <div class="field" id="returnPhotosSectionV37">
+      <label class="req">FOTOGRAFÍAS DE LA DEVOLUCIÓN</label>
+      <div class="return-photo-grid-v37" id="returnPhotoFields">
+        <div class="photo-card">
+          <div class="photo-label">1. PARTE FRONTAL</div>
+          <div class="photo-box"><input type="file" accept="image/*" capture="environment" data-return-photo="devolucion_frontal" required>
+            <img alt="Parte frontal al devolver"><div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO</div>
+          </div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-label">2. LATERAL IZQUIERDO</div>
+          <div class="photo-box"><input type="file" accept="image/*" capture="environment" data-return-photo="devolucion_lateral_izquierdo" required>
+            <img alt="Lateral izquierdo al devolver"><div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO</div>
+          </div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-label">3. LATERAL DERECHO</div>
+          <div class="photo-box"><input type="file" accept="image/*" capture="environment" data-return-photo="devolucion_lateral_derecho" required>
+            <img alt="Lateral derecho al devolver"><div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO</div>
+          </div>
+        </div>
+        <div class="photo-card">
+          <div class="photo-label">4. PARTE TRASERA</div>
+          <div class="photo-box"><input type="file" accept="image/*" capture="environment" data-return-photo="devolucion_trasera" required>
+            <img alt="Parte trasera al devolver"><div class="photo-placeholder"><span>📷</span>TOCAR PARA TOMAR FOTO</div>
+          </div>
+        </div>
+      </div>
+      <div class="return-photo-help-v37">Las 4 fotografías son obligatorias y quedarán asociadas a este registro de devolución.</div>
+    </div>
+
+    <div class="modal-actions"><button class="secondary" type="button" onclick="closeReturnModal()">CANCELAR</button><button class="primary" type="button" onclick="confirmReturn()">CONFIRMAR</button></div>
   </div>
 </div>
 
@@ -1417,7 +1649,7 @@ function renderCatalog(){
  el.innerHTML=rows.map(e=>`
   <div class="catalog-row">
    <div class="catalog-main">
-    <strong>${esc(e.id)} · ${esc(e.type)}</strong>
+    <strong>${esc(e.id)} - ${esc(e.type)}</strong>
     <small>${e.assetClass==="EQUIPO"?"EQUIPO":"IMPLEMENTO / REFERENCIA"} · ${e.status==="assigned"?"ASIGNADO":"DISPONIBLE"}</small>
    </div>
    ${catalogTab==="EQUIPO"?`<div class="catalog-actions">
@@ -2098,7 +2330,7 @@ function renderNotifications(){
  box.innerHTML=rows.map(e=>{
   const due=e.dueDate?parseLocalDateV28(e.dueDate):null;
   const dueText=due?due.toLocaleDateString("es-PA"):"Sin fecha";
-  return `<div class="notification-item"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin responsable")}<br>Venció: ${esc(dueText)} · ${Math.abs(e.dueDays)} día(s) vencido(s).</small><span class="status overdue">VENCIDO</span></div>`;
+  return `<div class="notification-item"><strong>${esc(e.id)} - ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin responsable")}<br>Venció: ${esc(dueText)} · ${Math.abs(e.dueDays)} día(s) vencido(s).</small><span class="status overdue">VENCIDO</span></div>`;
  }).join("");
  refreshIcons();
 }
@@ -2122,12 +2354,26 @@ function clearLoanEditModeV28(){
  if(eqTrigger)eqTrigger.disabled=false;
  if(imTrigger)imTrigger.disabled=false;
 }
-function openLoanEditorV28(movementId){
+async function openLoanEditorV28(movementId){
  if(!requireAdmin())return;
- const m=db.movements.find(x=>String(x.id)===String(movementId));
+ let m=db.movements.find(x=>String(x.id)===String(movementId));
  if(!m||m.type!=="delivery"){
   toast("No se encontró el préstamo para editar");
   return;
+ }
+ // V36: si el historial general solo tiene el resumen liviano,
+ // consulta el detalle únicamente de este activo antes de editar.
+ if(!m.form||Object.keys(m.form).length===0){
+  const asset=findAssetV32(m.equipmentId,m.assetClass);
+  if(asset){
+   try{
+    await fetchAssetDetailsV36(asset);
+    m=db.movements.find(x=>String(x.id)===String(movementId))||m;
+   }catch(err){
+    toast(customRpcError(err));
+    return;
+   }
+  }
  }
  const kind=String(m.assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
  editingLoanMovementIdV28=m.id;
@@ -2469,7 +2715,7 @@ async function saveOwnPassword(){
 }
 
 function titleFor(view){
- const map={home:"ENTREGA DE EQUIPO",delivery:"ENTREGA DE EQUIPO",implement:"ENTREGA DE IMPLEMENTO",returns:"DEVOLUCIÓN",equipment:"EQUIPOS E IMPLEMENTOS",history:"HISTORIAL",catalog:"ADMINISTRAR CATÁLOGO",users:"ADMINISTRAR USUARIOS",profile:"PERFIL"};
+ const map={home:"ENTREGA DE EQUIPO",delivery:"ENTREGA DE EQUIPO",implement:"ENTREGA DE IMPLEMENTO",returns:"DEVOLUCIÓN",equipment:"EQUIPOS E IMPLEMENTOS",assetDetail:"DETALLE DEL ACTIVO",history:"HISTORIAL",historyDetail:"HISTORIAL DEL ACTIVO",catalog:"ADMINISTRAR CATÁLOGO",users:"ADMINISTRAR USUARIOS",profile:"PERFIL"};
  return map[view]||"ENTREGA DE EQUIPO";
 }
 function go(view,btn){
@@ -2487,14 +2733,16 @@ function go(view,btn){
  document.querySelectorAll(".nav-btn").forEach(n=>n.classList.toggle("active",n.dataset.nav===view || (view==="returns"&&n.dataset.nav==="equipment")));
  document.getElementById("formActions").classList.toggle("show",view==="delivery");
  document.getElementById("implementFormActions").classList.toggle("show",view==="implement");
- const detailView=view==="delivery"||view==="implement"||view==="catalog"||view==="users";
+ const detailView=view==="delivery"||view==="implement"||view==="assetDetail"||view==="historyDetail"||view==="catalog"||view==="users";
  document.getElementById("fab").classList.toggle("hide",detailView);
  document.getElementById("menuBtn").style.display=detailView?"none":"grid";
  document.getElementById("backBtn").style.display=detailView?"grid":"none";
- document.getElementById("backBtn").onclick=()=>go((view==="catalog"||view==="users")?"profile":"home");
+ document.getElementById("backBtn").onclick=()=>go(view==="assetDetail"?"equipment":(view==="historyDetail"?"history":((view==="catalog"||view==="users")?"profile":"home")));
  if(view==="equipment")renderEquipment();
  if(view==="returns")renderReturns();
  if(view==="history")renderHistory();
+ if(view==="assetDetail")renderAssetDetailV32();
+ if(view==="historyDetail")renderHistoryDetailV39();
  if(view==="catalog")renderCatalog();
  if(view==="users")renderUsers();
  if(view==="delivery"){populateFormPickers();setStep(currentStep)}
@@ -2573,7 +2821,7 @@ function equipmentCard(e){
  const stateText=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
  const detail=e.status==="assigned"
    ? (overdue?`${Math.abs(e.dueDays)} días vencidos`:(typeof e.dueDays==="number"?(e.dueDays===0?"Vence hoy":`${e.dueDays} días restantes`):esc(e.finca||"Asignado")))
-   : `${esc(e.id)} · ${esc(e.type)}`;
+   : `${esc(kind)}${e.finca?` · ${esc(e.finca)}`:""}`;
  const adminActions=(kind==="EQUIPO"&&isAdmin())?`
    <div class="equipment-card-actions">
      <button class="edit" onclick="event.stopPropagation();openEquipmentEditor('${safeId}')">EDITAR</button>
@@ -2583,7 +2831,7 @@ function equipmentCard(e){
    <div class="equip-card-main">
      <div class="equip-photo" aria-hidden="true">${e.photo?`<img src="${esc(e.photo)}" alt="">`:`<span>${icon}</span>`}</div>
      <div class="equip-head">
-       <strong>${esc(e.type)}</strong>
+       <strong>${esc(e.id)} - ${esc(e.type)}</strong>
        <small>${detail}</small>
        <span class="status ${cls}">${stateText}</span>
      </div>
@@ -2602,7 +2850,7 @@ function renderEquipment(){
       eqFilter==="today" ? assetDeliveredToday(e) :
       (eqFilter==="EQUIPO" || eqFilter==="IMPLEMENTO") ? e.assetClass===eqFilter :
       e.status===eqFilter);
-  return matchFilter && `${e.id} ${e.type} ${e.assetClass||""} ${e.finca} ${e.assignedTo||""}`.toLowerCase().includes(q);
+  return matchFilter && `${e.id} ${e.type} ${e.assetClass||""} ${e.finca} ${e.assignedTo||""} ${assetLaborV41(e)}`.toLowerCase().includes(q);
  });
  document.getElementById("equipmentList").innerHTML=rows.length?rows.map(e=>equipmentCard(e)).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">No se encontraron equipos.</div></div>`;
  refreshIcons();
@@ -2613,21 +2861,21 @@ function renderReturns(){
  const q=(document.getElementById("returnSearch")?.value||"").toLowerCase();
  const rows=db.equipment.filter(e=>e.status==="assigned"&&`${e.id} ${e.type} ${e.assetClass||""} ${e.finca} ${e.assignedTo||""}`.toLowerCase().includes(q));
  document.getElementById("returnList").innerHTML=rows.length?rows.map(e=>`
-  <div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin operador")}</small></div><button onclick="openReturn('${esc(e.id)}','${e.assetClass}')">DEVOLVER</button></div>
+  <div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} - ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"Sin operador")}</small></div><button onclick="openReturn('${esc(e.id)}','${e.assetClass}')">DEVOLVER</button></div>
  `).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">No hay equipos asignados.</div></div>`;
  refreshIcons();
 }
 function renderHistory(){
- const q=(document.getElementById("historySearch")?.value||"").toLowerCase();
- const rows=[...db.movements].sort((a,b)=>new Date(b.date)-new Date(a.date)).filter(m=>`${m.type} ${m.equipmentId} ${m.finca||""} ${m.operator||""}`.toLowerCase().includes(q));
- document.getElementById("historyList").innerHTML=rows.length?rows.map(m=>{
-  const safeMovementId=String(m.id||"").replace(/'/g,"\\'");
-  const editAction=(m.type==="delivery"&&isAdmin())
-   ?`<div class="movement-actions"><button type="button" onclick="openLoanEditorV28('${safeMovementId}')">EDITAR PRÉSTAMO</button></div>`
-   :"";
-  const assetClass=esc(m.assetClass||db.equipment.find(e=>e.id===m.equipmentId && e.assetClass==="EQUIPO")?.assetClass||"EQUIPO");
-  return `<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-card"><strong>${m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN"} · ${esc(m.equipmentId)}</strong><div class="history-main-date"><span>FECHA DEL REGISTRO</span><b>${formatDateTime(m.date)}</b></div><p>${assetClass}${m.finca?" · "+esc(m.finca):""}${m.operator?" · "+esc(m.operator):""}</p>${editAction}</div></div>`;
- }).join(""):`<div class="card"><div class="card-body" style="text-align:center;color:#888">Sin movimientos.</div></div>`;
+ const box=document.getElementById("historyList");
+ if(!box)return;
+ if(historySearchStateV39.loading){
+  box.innerHTML='<div class="history-loading-v39"><span class="history-spinner-v39"></span><span>Consultando historial del equipo…</span></div>';
+ }else if(historySearchStateV39.searched){
+  renderHistorySearchResultsV39();
+ }else{
+  box.innerHTML='<div class="history-empty-v39"><i data-lucide="search"></i><div>Escribe el número del equipo y pulsa <b>BUSCAR</b> para consultar su historial.</div></div>';
+ }
+ refreshIcons();
 }
 
 
@@ -2653,7 +2901,7 @@ function openReturn(id,assetClass){
  document.getElementById("returnNotes").value="";
  const activeDelivery=latestDeliveryForAssetV28(e);
  const editLoanButton=(isAdmin()&&activeDelivery)?`<div class="movement-actions"><button type="button" onclick="closeReturnModal();openLoanEditorV28('${String(activeDelivery.id).replace(/'/g,"\\'")}')">EDITAR PRÉSTAMO</button></div>`:"";
- document.getElementById("returnModalInfo").innerHTML=`<div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} · ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"")}</small></div></div>${editLoanButton}`;
+ document.getElementById("returnModalInfo").innerHTML=`<div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} - ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"")}</small></div></div>${editLoanButton}`;
  document.getElementById("returnModal").classList.add("open");
  refreshIcons();
 }
@@ -2678,7 +2926,10 @@ document.addEventListener("click",e=>{
   const name=group.dataset.iname;
   if(name==="finca")document.getElementById("implementFinca").value=b.dataset.value;
   if(name==="estadoGeneralImplemento")document.getElementById("estadoGeneralImplemento").value=b.dataset.value;
-  if(name==="tieneDanos")document.getElementById("implementTieneDanos").value=b.dataset.value;
+  if(name==="tieneDanos"){
+   document.getElementById("implementTieneDanos").value=b.dataset.value;
+   setImplementDamagePhotoRequirementV42(b.dataset.value==="SI");
+  }
   saveImplementDraft();
  }
  const pill=e.target.closest("[data-istep-go]");
@@ -2711,6 +2962,14 @@ function nextImplementStep(){
 function previousImplementStep(){setImplementStep(currentImplementStep-1)}
 function validateImplementStep(step){
  const section=document.querySelector(`.implement-step[data-istep="${step}"]`);
+ if(step===1&&document.getElementById("implementTieneDanos")?.value==="SI"){
+  const damagePhoto=document.getElementById("implementDamagePhotoInput");
+  if(!damagePhoto?.files?.[0]&&!editingLoanMovementIdV28){
+   toast("Agrega una foto donde se muestre el daño");
+   document.getElementById("implementDamagePhotoCardV42")?.scrollIntoView({behavior:"smooth",block:"center"});
+   return false;
+  }
+ }
  for(const el of section.querySelectorAll("[required]")){
   if(!String(el.value||"").trim()){
    const field=el.closest(".field");
@@ -2752,6 +3011,7 @@ function restoreImplementDraft(){
   if(d.entregadoPorTaller){setPickerValue("implementEntregadoPorTaller","implementTallerTrigger",d.entregadoPorTaller);loadStoredSignatureIntoRole("implementTaller",d.entregadoPorTaller);}
   if(d.recibidoPorCampo){setPickerValue("implementRecibidoPorCampo","implementCampoTrigger",d.recibidoPorCampo);loadStoredSignatureIntoRole("implementCampo",d.recibidoPorCampo);}
   if(d.recibidoOperador){setPickerValue("implementOperador","implementOperadorTrigger",d.recibidoOperador);loadStoredSignatureIntoRole("implementOperador",d.recibidoOperador);}
+  setImplementDamagePhotoRequirementV42(d.tieneDanos==="SI");
  }catch(e){}
 }
 function showImplementSelected(id){
@@ -2759,7 +3019,7 @@ function showImplementSelected(id){
  const box=document.getElementById("implementSelectedInfo");
  if(!item){box.style.display="none";return}
  box.style.display="block";
- box.innerHTML=`<strong>${esc(item.type)}</strong><small>Referencia: ${esc(item.id)} · IMPLEMENTO</small>`;
+ box.innerHTML=`<strong>${esc(item.id)} - ${esc(item.type)}</strong><small>IMPLEMENTO</small>`;
 }
 function saveImplementForm(){
  for(let i=0;i<4;i++){if(!validateImplementStep(i)){setImplementStep(i);return}}
@@ -2808,6 +3068,7 @@ function resetImplementForm(){
  document.getElementById("implementSelectedInfo").style.display="none";
  document.getElementById("implementId").value=makeId();
  document.getElementById("implementFechaEntrega").value=todayISO();
+ setImplementDamagePhotoRequirementV42(false);
  ["implementTaller","implementCampo","implementOperador"].forEach(role=>{
   clearRoleSignature(role);
  });
@@ -2822,13 +3083,47 @@ document.addEventListener("change",e=>{
 });
 
 
+/* V42 — FOTO OBLIGATORIA CUANDO SE REGISTRA DAÑO */
+function setDamagePhotoRequirementV42(hasDamage){
+ const input=document.getElementById("damagePhotoInput");
+ const extra=document.getElementById("damageExtra");
+ if(extra)extra.style.display=hasDamage?"block":"none";
+ if(!input)return;
+ input.required=!!hasDamage;
+ if(!hasDamage){
+  input.value="";
+  const box=input.closest(".photo-box"),img=box?.querySelector("img"),ph=box?.querySelector(".photo-placeholder");
+  if(img){
+   if(img.dataset.objectUrl){try{URL.revokeObjectURL(img.dataset.objectUrl)}catch(_e){}}
+   img.removeAttribute("src");img.dataset.objectUrl="";img.style.display="none";
+  }
+  if(ph)ph.style.display="";
+ }
+}
+function setImplementDamagePhotoRequirementV42(hasDamage){
+ const input=document.getElementById("implementDamagePhotoInput");
+ const extra=document.getElementById("implementDamageExtraV42");
+ if(extra)extra.style.display=hasDamage?"block":"none";
+ if(!input)return;
+ input.required=!!hasDamage;
+ if(!hasDamage){
+  input.value="";
+  const box=input.closest(".photo-box"),img=box?.querySelector("img"),ph=box?.querySelector(".photo-placeholder");
+  if(img){
+   if(img.dataset.objectUrl){try{URL.revokeObjectURL(img.dataset.objectUrl)}catch(_e){}}
+   img.removeAttribute("src");img.dataset.objectUrl="";img.style.display="none";
+  }
+  if(ph)ph.style.display="";
+ }
+}
+
 /* FORM CHOICES */
 document.addEventListener("click",e=>{
  const b=e.target.closest(".choice");if(!b)return;
  const group=b.closest("[data-name]"); if(!group)return;
  group.querySelectorAll(".choice").forEach(x=>x.classList.remove("active"));b.classList.add("active");
  const name=group.dataset.name;const input=document.getElementById(name);if(input)input.value=b.dataset.value;
- if(name==="tieneDanos")document.getElementById("damageExtra").style.display=b.dataset.value==="SI"?"block":"none";
+ if(name==="tieneDanos")setDamagePhotoRequirementV42(b.dataset.value==="SI");
  if(name!=="returnCondition")saveDraft();
  const pill=e.target.closest("[data-step-go]"); 
 });
@@ -2857,6 +3152,14 @@ function nextStep(){if(currentStep===4){saveForm();return}if(validateStep(curren
 function previousStep(){setStep(currentStep-1)}
 function validateStep(step){
  const section=document.querySelector(`.form-step[data-step="${step}"]`);
+ if(step===3&&document.getElementById("tieneDanos")?.value==="SI"){
+  const damagePhoto=document.getElementById("damagePhotoInput");
+  if(!damagePhoto?.files?.[0]&&!editingLoanMovementIdV28){
+   toast("Agrega una foto donde se muestre el daño");
+   document.getElementById("damagePhotoCardV42")?.scrollIntoView({behavior:"smooth",block:"center"});
+   return false;
+  }
+ }
  for(const el of section.querySelectorAll("[required]")){
   if(!String(el.value||"").trim()){
    const field=el.closest(".field");const label=field?.querySelector("label")?.textContent||"campo obligatorio";
@@ -2882,7 +3185,7 @@ function restoreDraft(){
   if(d.entregadoPorTaller){setPickerValue("entregadoPorTaller","tallerTrigger",d.entregadoPorTaller);loadStoredSignatureIntoRole("taller",d.entregadoPorTaller);}
   if(d.recibidoPorCampo){setPickerValue("recibidoPorCampo","campoTrigger",d.recibidoPorCampo);loadStoredSignatureIntoRole("campo",d.recibidoPorCampo);}
   if(d.recibidoOperador){setPickerValue("recibidoOperador","operadorTrigger",d.recibidoOperador);loadStoredSignatureIntoRole("operador",d.recibidoOperador);}
-  if(d.tieneDanos==="SI")document.getElementById("damageExtra").style.display="block";
+  setDamagePhotoRequirementV42(d.tieneDanos==="SI");
  }catch(e){}
 }
 
@@ -2918,7 +3221,7 @@ function resetForm(){
  document.getElementById("campoTrigger").querySelector("span:first-child").textContent="Seleccione personal de campo";
  document.getElementById("operadorTrigger").classList.add("empty");
  document.getElementById("operadorTrigger").querySelector("span:first-child").textContent="Seleccione operador";
- document.getElementById("damageExtra").style.display="none";document.getElementById("id").value=makeId();document.getElementById("fechaEntrega").value=todayISO();document.getElementById("assetClass").value="EQUIPO";
+ setDamagePhotoRequirementV42(false);document.getElementById("id").value=makeId();document.getElementById("fechaEntrega").value=todayISO();document.getElementById("assetClass").value="EQUIPO";
  ["taller","campo","operador"].forEach(role=>clearRoleSignature(role));
  setStep(0)
 }
@@ -3013,12 +3316,12 @@ function pickerRows(){
  if(pickerType==="numeroEquipo"){
   return db.equipment
    .filter(e=>e.status==="available" && e.assetClass==="EQUIPO")
-   .map(e=>({value:e.id,sub:`EQUIPO · ${e.type}${e.finca?` · ${e.finca}`:""}`}));
+   .map(e=>({value:e.id,label:`${e.id} - ${e.type}`,sub:`EQUIPO${e.finca?` · ${e.finca}`:""}`}));
  }
  if(pickerType==="implemento"){
   return db.equipment
    .filter(e=>e.status==="available" && e.assetClass==="IMPLEMENTO")
-   .map(e=>({value:e.id,sub:`IMPLEMENTO · ${e.type}`}));
+   .map(e=>({value:e.id,label:`${e.id} - ${e.type}`,sub:`IMPLEMENTO`}));
  }
  if(pickerType==="taller"||pickerType==="implementTaller")return (personnelLists.taller||[]).map(v=>({value:v,sub:""}));
  if(pickerType==="campo"||pickerType==="implementCampo")return (personnelLists.campo||[]).map(v=>({value:v,sub:""}));
@@ -3050,7 +3353,7 @@ function closePicker(){document.getElementById("sheetBackdrop").classList.remove
 function renderPickerOptions(){
  const q=document.getElementById("sheetSearch").value.toLowerCase();
  const rows=pickerRows().filter(x=>(`${x.value} ${x.sub||""}`).toLowerCase().includes(q));
- document.getElementById("sheetOptions").innerHTML=rows.length?rows.map(x=>`<button class="sheet-option" onclick="choosePicker('${String(x.value).replace(/'/g,"\\'")}')"><span>${esc(x.value)}${x.sub?`<small>${esc(x.sub)}</small>`:""}</span><span>›</span></button>`).join(""):`<div style="padding:24px;text-align:center;color:#888">No hay nombres registrados. Agrega uno nuevo arriba.</div>`
+ document.getElementById("sheetOptions").innerHTML=rows.length?rows.map(x=>`<button class="sheet-option" onclick="choosePicker('${String(x.value).replace(/'/g,"\\'")}')"><span>${esc(x.label||x.value)}${x.sub?`<small>${esc(x.sub)}</small>`:""}</span><span>›</span></button>`).join(""):`<div style="padding:24px;text-align:center;color:#888">No hay nombres registrados. Agrega uno nuevo arriba.</div>`
 }
 function choosePicker(v){
  if(pickerType==="numeroEquipo")setPickerValue("numeroEquipo","numeroEquipoTrigger",v);
@@ -3071,7 +3374,13 @@ function setPickerValue(inputId,triggerId,v){
  if(inputId==="numeroEquipo") v=String(v).replace(/-/g,"");
  document.getElementById(inputId).value=v;
  const t=document.getElementById(triggerId);
- t.querySelector("span:first-child").textContent=v;
+ let visible=v;
+ if(inputId==="numeroEquipo"||inputId==="implementNumero"){
+  const expectedClass=inputId==="implementNumero"?"IMPLEMENTO":"EQUIPO";
+  const asset=db.equipment.find(e=>String(e.id)===String(v)&&String(e.assetClass||"EQUIPO").toUpperCase()===expectedClass);
+  if(asset)visible=`${asset.id} - ${asset.type}`;
+ }
+ t.querySelector("span:first-child").textContent=visible;
  t.classList.remove("empty")
 }
 function addPersonToCurrentList(){
@@ -5020,6 +5329,8 @@ async function syncFromSupabase(){
   form:m.formulario||{}
  }));
 
+ await hydrateMovementPhotosV33(data);
+
  cloudPersonnelRows=personal;
  personnelLists={taller:[],campo:[],operador:[]};
 
@@ -5312,7 +5623,7 @@ function renderCatalog(){
   return `
    <div class="catalog-row">
     <div class="catalog-main">
-     <strong>${esc(e.id)} · ${esc(e.type)}</strong>
+     <strong>${esc(e.id)} - ${esc(e.type)}</strong>
      <small>${kind==="EQUIPO"?"EQUIPO":"IMPLEMENTO / REFERENCIA"} · ${e.status==="assigned"?"ASIGNADO":"DISPONIBLE"}</small>
     </div>
     <div class="catalog-actions">
@@ -5332,7 +5643,9 @@ function equipmentCard(e){
  const stateText=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
  const detail=e.status==="assigned"
    ? (overdue?`${Math.abs(e.dueDays)} días vencidos`:(typeof e.dueDays==="number"?(e.dueDays===0?"Vence hoy":`${e.dueDays} días restantes`):esc(e.finca||"Asignado")))
-   : `${esc(e.id)} · ${esc(e.type)}`;
+   : `${esc(kind)}${e.finca?` · ${esc(e.finca)}`:""}`;
+ const labor=e.status==="assigned"?assetLaborV41(e):'';
+ const laborLine=e.status==="assigned"?`<span class="equip-labor-v41">LABOR: ${esc(labor||"SIN REGISTRO")}</span>`:'';
  const adminActions=isAdmin()?`
    <div class="equipment-card-actions">
      <button class="edit" onclick="event.stopPropagation();openEquipmentEditor('${safeId}','${kind}')">EDITAR</button>
@@ -5342,8 +5655,8 @@ function equipmentCard(e){
    <div class="equip-card-main">
      <div class="equip-photo" aria-hidden="true">${e.photo?`<img src="${esc(e.photo)}" alt="">`:`<span>${icon}</span>`}</div>
      <div class="equip-head">
-       <strong>${esc(e.type)}</strong>
-       <small>${detail}</small>
+       <strong>${esc(e.id)} - ${esc(e.type)}</strong>
+       <small>${detail}${laborLine}</small>
        <span class="status ${cls}">${stateText}</span>
      </div>
      <span class="equip-chevron" aria-hidden="true"><i data-lucide="chevron-right"></i></span>
@@ -5494,6 +5807,1225 @@ function deleteEquipment(id,assetClass="EQUIPO"){
 }
 
 
+
+
+/* ==========================================================
+   V32 — DETALLE DE ASIGNADOS
+   Al tocar un activo ASIGNADO abre una ficha con:
+   - datos del préstamo/entrega actual
+   - inspección/observaciones registradas
+   - historial completo del activo
+   - acciones de devolución y edición (admin)
+   ========================================================== */
+
+/* ==========================================================
+   V34 — FOTOS REALES EN DETALLE / CARGA BAJO DEMANDA
+   - Lee fotos incluidas por app_sync_data si existen.
+   - Intenta leer fotos_movimiento por movimiento_id.
+   - Como respaldo, busca archivos en Storage por carpeta del movimiento.
+   - También reconoce URLs antiguas guardadas dentro de formulario.
+   ========================================================== */
+let movementPhotosV33=[];
+const movementPhotoLoadedV34=new Set();
+const movementPhotoLoadingV34=new Set();
+
+function normalizeMovementPhotoV33(p){
+ const movementId=p?.movimiento_id??p?.movement_id??p?.movimientoId??p?.id_movimiento??"";
+ const position=String(p?.posicion??p?.position??p?.tipo??p?.nombre??"otro");
+ const storagePath=String(p?.storage_path??p?.ruta_storage??p?.path??"");
+ let url=String(p?.foto_url??p?.public_url??p?.publicUrl??p?.url??"");
+ if(!url&&storagePath&&sb){
+  try{
+   const r=sb.storage.from(typeof PHOTO_BUCKET_V25!=="undefined"?PHOTO_BUCKET_V25:"entrega-equipos").getPublicUrl(storagePath);
+   url=r?.data?.publicUrl||"";
+  }catch(_e){}
+ }
+ return {
+  id:p?.id||`${movementId}-${position}-${storagePath||url}`,
+  movementId:String(movementId||""),
+  position,
+  url,
+  storagePath,
+  mimeType:p?.mime_type||p?.mimeType||"",
+  createdAt:p?.created_at||p?.fecha||""
+ };
+}
+
+function mergeMovementPhotosV34(items=[]){
+ const normalized=(items||[]).map(normalizeMovementPhotoV33).filter(p=>p.movementId&&p.url);
+ const map=new Map();
+ [...movementPhotosV33,...normalized].forEach(p=>{
+  const key=[p.movementId,p.position,p.storagePath||p.url].join('|');
+  map.set(key,p);
+ });
+ movementPhotosV33=[...map.values()];
+ if(db?.movements){
+  db.movements.forEach(m=>{
+   m.photos=movementPhotosV33.filter(p=>String(p.movementId)===String(m.id));
+  });
+ }
+}
+
+function syncPhotoCandidatesV34(syncData){
+ const candidates=[
+  syncData?.fotos,
+  syncData?.fotos_movimiento,
+  syncData?.imagenes,
+  syncData?.movement_photos,
+  syncData?.photos
+ ];
+ candidates.forEach(c=>{if(Array.isArray(c)&&c.length)mergeMovementPhotosV34(c);});
+}
+
+async function hydrateMovementPhotosV33(syncData){
+ syncPhotoCandidatesV34(syncData);
+ // No bloqueamos la sincronización general si RLS impide esta lectura.
+ if(!movementPhotosV33.length&&sb){
+  try{
+   const {data,error}=await sb.from("fotos_movimiento").select("*").limit(1000);
+   if(!error&&Array.isArray(data))mergeMovementPhotosV34(data);
+  }catch(_e){}
+ }
+}
+
+function photoPositionFromFilenameV34(name){
+ const base=String(name||"").toLowerCase().replace(/\.[^.]+$/,'');
+ for(const [id] of photoNames){
+  const idLow=String(id).toLowerCase();
+  const safe=(typeof safeStorageNameV25==="function"?safeStorageNameV25(id):idLow).toLowerCase();
+  if(base===idLow||base.startsWith(idLow+'-')||base===safe||base.startsWith(safe+'-'))return id;
+ }
+ return base.split('-')[0]||"otro";
+}
+
+function legacyPhotosFromFormV34(m){
+ const found=[];
+ const walk=(obj,path=[])=>{
+  if(!obj||typeof obj!=="object")return;
+  Object.entries(obj).forEach(([k,v])=>{
+   const next=[...path,k];
+   if(typeof v==="string"){
+    const val=v.trim();
+    const key=String(k).toLowerCase();
+    if((/^https?:\/\//i.test(val)||/^data:image\//i.test(val)) && /(foto|photo|imagen|image|frontal|trasera|lateral|motor|cabina)/i.test(key)){
+     found.push({
+      movimiento_id:m.id,
+      posicion:k,
+      foto_url:val,
+      id:`legacy-${m.id}-${next.join('-')}`
+     });
+    }
+   }else if(v&&typeof v==="object"&&!Array.isArray(v))walk(v,next);
+  });
+ };
+ walk(m?.form||{});
+ return found;
+}
+
+async function loadPhotosForMovementsV34(movementIds=[]){
+ const ids=[...new Set((movementIds||[]).map(String).filter(Boolean))];
+ const missing=ids.filter(id=>!movementPhotoLoadedV34.has(id)&&!movementPhotoLoadingV34.has(id));
+ if(!missing.length)return;
+ missing.forEach(id=>movementPhotoLoadingV34.add(id));
+
+ try{
+  // 1) Aprovecha cualquier foto que ya venga en app_sync_data.
+  if(sb&&customSessionToken){
+   try{
+    const sync=await sb.rpc("app_sync_data",{p_token:customSessionToken});
+    if(!sync.error&&sync.data)syncPhotoCandidatesV34(sync.data);
+   }catch(_e){}
+  }
+
+  // 2) Consulta directa, filtrada solo a los movimientos visibles.
+  if(sb){
+   try{
+    const {data,error}=await sb.from("fotos_movimiento").select("*").in("movimiento_id",missing);
+    if(!error&&Array.isArray(data)&&data.length)mergeMovementPhotosV34(data);
+   }catch(_e){}
+  }
+
+  // 3) Compatibilidad con instalaciones donde la tabla está protegida
+  // pero el bucket público permite listar las carpetas del movimiento.
+  if(sb){
+   const bucket=typeof PHOTO_BUCKET_V25!=="undefined"?PHOTO_BUCKET_V25:"entrega-equipos";
+   for(const movementId of missing){
+    const already=movementPhotosV33.some(p=>String(p.movementId)===movementId);
+    if(already)continue;
+    const folders=[`registros/${movementId}`];
+    if(currentUser?.id)folders.push(`${currentUser.id}/${movementId}`);
+    for(const folder of folders){
+     try{
+      const {data,error}=await sb.storage.from(bucket).list(folder,{limit:100,sortBy:{column:"name",order:"asc"}});
+      if(error||!Array.isArray(data)||!data.length)continue;
+      const rows=data.filter(x=>x?.name&&!x?.name.endsWith('/')).map(file=>{
+       const storagePath=`${folder}/${file.name}`;
+       const pub=sb.storage.from(bucket).getPublicUrl(storagePath)?.data?.publicUrl||"";
+       return {
+        movimiento_id:movementId,
+        posicion:photoPositionFromFilenameV34(file.name),
+        storage_path:storagePath,
+        foto_url:pub,
+        id:file.id||`${movementId}-${file.name}`,
+        created_at:file.created_at||file.updated_at||""
+       };
+      });
+      if(rows.length){mergeMovementPhotosV34(rows);break;}
+     }catch(_e){}
+    }
+   }
+  }
+
+  // 4) Fotos antiguas que hayan quedado guardadas como URL dentro del formulario.
+  missing.forEach(id=>{
+   const m=db.movements.find(x=>String(x.id)===id);
+   if(m)mergeMovementPhotosV34(legacyPhotosFromFormV34(m));
+  });
+ }finally{
+  missing.forEach(id=>{
+   movementPhotoLoadingV34.delete(id);
+   movementPhotoLoadedV34.add(id);
+  });
+ }
+}
+
+function movementPhotosForV33(movementId){
+ const id=String(movementId||"");
+ const m=db.movements.find(x=>String(x.id)===id);
+ const own=Array.isArray(m?.photos)?m.photos:[];
+ const combined=[...own,...movementPhotosV33.filter(p=>String(p.movementId)===id)];
+ const map=new Map();
+ combined.filter(p=>p?.url).forEach(p=>map.set(`${p.position}|${p.storagePath||p.url}`,p));
+ return [...map.values()];
+}
+
+function movementPhotoLabelV33(position,kind="EQUIPO"){
+ const key=String(position||"").toLowerCase();
+ const returnLabelsV37={
+  dano:"FOTO DEL DAÑO",
+  daño:"FOTO DEL DAÑO",
+  damage:"FOTO DEL DAÑO",
+  devolucion_frontal:"DEVOLUCIÓN · PARTE FRONTAL",
+  devolucion_lateral_izquierdo:"DEVOLUCIÓN · LATERAL IZQUIERDO",
+  devolucion_lateral_derecho:"DEVOLUCIÓN · LATERAL DERECHO",
+  devolucion_trasera:"DEVOLUCIÓN · PARTE TRASERA"
+ };
+ if(returnLabelsV37[key])return returnLabelsV37[key];
+ const found=photoNames.find(([id])=>String(id).toLowerCase()===key);
+ let label=found?found[1]:String(position||"IMAGEN").replace(/_/g," ").replace(/-/g," ").toUpperCase();
+ if(kind==="IMPLEMENTO")label=label.replace(/EQUIPO/g,"IMPLEMENTO");
+ return label;
+}
+
+function movementPhotoGalleryV33(movementId,kind="EQUIPO",compact=false){
+ const id=String(movementId||"");
+ const photos=movementPhotosForV33(id);
+ const loading=movementPhotoLoadingV34.has(id);
+ const loaded=movementPhotoLoadedV34.has(id);
+ const title=compact?"FOTOGRAFÍAS":"Fotografías de la entrega";
+ if(!photos.length){
+  const msg=loading?"Cargando fotografías…":loaded?"No hay fotografías guardadas para este registro.":"Buscando fotografías…";
+  return `<div class="asset-photo-block${compact?' compact':''}"><div class="asset-photo-title"><strong>${title}</strong><small>${loading?'cargando':'0 foto(s)'}</small></div><div class="asset-photo-empty"><i data-lucide="image" aria-hidden="true"></i><span>${msg}</span></div></div>`;
+ }
+ return `<div class="asset-photo-block${compact?' compact':''}"><div class="asset-photo-title"><strong>${title}</strong><small>${photos.length} foto(s)</small></div><div class="asset-photo-grid">${photos.map(p=>{
+  const label=movementPhotoLabelV33(p.position,kind);
+  const u=encodeURIComponent(p.url);
+  const l=encodeURIComponent(label);
+  return `<button class="asset-photo-thumb" type="button" onclick="openPhotoViewerV33(decodeURIComponent('${u}'),decodeURIComponent('${l}'))"><span class="asset-photo-image"><img src="${esc(p.url)}" alt="${esc(label)}" loading="lazy" onerror="this.closest('button').classList.add('photo-error-v34')"></span><span>${esc(label)}</span></button>`;
+ }).join("")}</div></div>`;
+}
+
+let photoViewerStateV35={scale:1,x:0,y:0,pointers:new Map(),pinchDistance:0,pinchScale:1,dragStart:null};
+
+function clampPhotoViewerV35(){
+ const stage=document.getElementById("photoViewerStageV35");
+ if(!stage)return;
+ const s=photoViewerStateV35.scale;
+ if(s<=1){photoViewerStateV35.x=0;photoViewerStateV35.y=0;return;}
+ const maxX=Math.max(0,stage.clientWidth*(s-1)/2);
+ const maxY=Math.max(0,stage.clientHeight*(s-1)/2);
+ photoViewerStateV35.x=Math.max(-maxX,Math.min(maxX,photoViewerStateV35.x));
+ photoViewerStateV35.y=Math.max(-maxY,Math.min(maxY,photoViewerStateV35.y));
+}
+function applyPhotoViewerTransformV35(){
+ const img=document.getElementById("photoViewerImageV33");
+ const z=document.getElementById("photoViewerZoomV35");
+ if(!img)return;
+ clampPhotoViewerV35();
+ const s=photoViewerStateV35.scale,x=photoViewerStateV35.x,y=photoViewerStateV35.y;
+ img.style.transform=`translate3d(${x}px,${y}px,0) scale(${s})`;
+ img.style.transition=photoViewerStateV35.pointers.size?'none':'transform .12s ease';
+ if(z)z.textContent=`${Math.round(s*100)}%`;
+}
+function setPhotoZoomV35(value){
+ photoViewerStateV35.scale=Math.max(1,Math.min(5,Number(value)||1));
+ if(photoViewerStateV35.scale===1){photoViewerStateV35.x=0;photoViewerStateV35.y=0;}
+ applyPhotoViewerTransformV35();
+}
+function changePhotoZoomV35(delta){setPhotoZoomV35(photoViewerStateV35.scale+delta)}
+function resetPhotoZoomV35(){
+ photoViewerStateV35.scale=1;photoViewerStateV35.x=0;photoViewerStateV35.y=0;
+ photoViewerStateV35.pointers.clear();photoViewerStateV35.dragStart=null;
+ applyPhotoViewerTransformV35();
+}
+function distancePhotoV35(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+
+function initPhotoViewerGesturesV35(viewer){
+ if(viewer.dataset.zoomReady==='1')return;
+ viewer.dataset.zoomReady='1';
+ const stage=viewer.querySelector('#photoViewerStageV35');
+ const img=viewer.querySelector('#photoViewerImageV33');
+ if(!stage||!img)return;
+
+ stage.addEventListener('wheel',ev=>{
+  ev.preventDefault();
+  changePhotoZoomV35(ev.deltaY<0?.25:-.25);
+ },{passive:false});
+
+ stage.addEventListener('dblclick',ev=>{
+  ev.preventDefault();
+  setPhotoZoomV35(photoViewerStateV35.scale>1?1:2.5);
+ });
+
+ stage.addEventListener('pointerdown',ev=>{
+  ev.preventDefault();
+  try{stage.setPointerCapture(ev.pointerId)}catch(_e){}
+  photoViewerStateV35.pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+  stage.classList.add('is-dragging');
+  if(photoViewerStateV35.pointers.size===1){
+   photoViewerStateV35.dragStart={pointerId:ev.pointerId,startX:ev.clientX,startY:ev.clientY,baseX:photoViewerStateV35.x,baseY:photoViewerStateV35.y};
+  }else if(photoViewerStateV35.pointers.size===2){
+   const pts=[...photoViewerStateV35.pointers.values()];
+   photoViewerStateV35.pinchDistance=distancePhotoV35(pts[0],pts[1]);
+   photoViewerStateV35.pinchScale=photoViewerStateV35.scale;
+   photoViewerStateV35.dragStart=null;
+  }
+ });
+
+ stage.addEventListener('pointermove',ev=>{
+  if(!photoViewerStateV35.pointers.has(ev.pointerId))return;
+  ev.preventDefault();
+  photoViewerStateV35.pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+  if(photoViewerStateV35.pointers.size>=2){
+   const pts=[...photoViewerStateV35.pointers.values()].slice(0,2);
+   const dist=distancePhotoV35(pts[0],pts[1]);
+   if(photoViewerStateV35.pinchDistance>0)setPhotoZoomV35(photoViewerStateV35.pinchScale*(dist/photoViewerStateV35.pinchDistance));
+  }else if(photoViewerStateV35.scale>1&&photoViewerStateV35.dragStart?.pointerId===ev.pointerId){
+   photoViewerStateV35.x=photoViewerStateV35.dragStart.baseX+(ev.clientX-photoViewerStateV35.dragStart.startX);
+   photoViewerStateV35.y=photoViewerStateV35.dragStart.baseY+(ev.clientY-photoViewerStateV35.dragStart.startY);
+   applyPhotoViewerTransformV35();
+  }
+ });
+
+ const endPointer=ev=>{
+  photoViewerStateV35.pointers.delete(ev.pointerId);
+  try{stage.releasePointerCapture(ev.pointerId)}catch(_e){}
+  if(photoViewerStateV35.pointers.size===0){
+   stage.classList.remove('is-dragging');
+   photoViewerStateV35.dragStart=null;
+   photoViewerStateV35.pinchDistance=0;
+  }else if(photoViewerStateV35.pointers.size===1){
+   const [pointerId,p]=[...photoViewerStateV35.pointers.entries()][0];
+   photoViewerStateV35.dragStart={pointerId,startX:p.x,startY:p.y,baseX:photoViewerStateV35.x,baseY:photoViewerStateV35.y};
+   photoViewerStateV35.pinchDistance=0;
+  }
+  applyPhotoViewerTransformV35();
+ };
+ stage.addEventListener('pointerup',endPointer);
+ stage.addEventListener('pointercancel',endPointer);
+
+ document.addEventListener('keydown',ev=>{
+  if(!viewer.classList.contains('open'))return;
+  if(ev.key==='Escape')closePhotoViewerV33();
+  else if(ev.key==='+'||ev.key==='=')changePhotoZoomV35(.25);
+  else if(ev.key==='-')changePhotoZoomV35(-.25);
+  else if(ev.key==='0')resetPhotoZoomV35();
+ });
+}
+
+function ensurePhotoViewerV33(){
+ let viewer=document.getElementById("photoViewerV33");
+ if(viewer){initPhotoViewerGesturesV35(viewer);return viewer;}
+ viewer=document.createElement("div");
+ viewer.id="photoViewerV33";
+ viewer.className="photo-viewer-v33";
+ viewer.innerHTML=`<div class="photo-viewer-card-v33">
+  <div class="photo-viewer-head-v33"><strong id="photoViewerTitleV33">Imagen</strong><button type="button" aria-label="Cerrar" onclick="closePhotoViewerV33()">×</button></div>
+  <div class="photo-viewer-toolbar-v35" aria-label="Controles de zoom">
+   <button type="button" aria-label="Alejar" onclick="changePhotoZoomV35(-.25)">−</button>
+   <span class="photo-viewer-zoom-v35" id="photoViewerZoomV35">100%</span>
+   <button type="button" aria-label="Acercar" onclick="changePhotoZoomV35(.25)">+</button>
+   <button type="button" aria-label="Restablecer zoom" onclick="resetPhotoZoomV35()" style="font-size:12px;width:auto;padding:0 12px">100%</button>
+  </div>
+  <div class="photo-viewer-stage-v35" id="photoViewerStageV35"><img id="photoViewerImageV33" class="photo-viewer-image-v33" alt="Imagen ampliada" draggable="false"></div>
+  <div class="photo-viewer-help-v35">Pellizca con dos dedos para ampliar · arrastra para mover · doble toque/clic para zoom</div>
+ </div>`;
+ viewer.addEventListener("click",ev=>{if(ev.target===viewer)closePhotoViewerV33();});
+ document.body.appendChild(viewer);
+ initPhotoViewerGesturesV35(viewer);
+ return viewer;
+}
+function openPhotoViewerV33(url,label="Imagen"){
+ if(!url)return;
+ const viewer=ensurePhotoViewerV33();
+ const img=document.getElementById("photoViewerImageV33");
+ const title=document.getElementById("photoViewerTitleV33");
+ resetPhotoZoomV35();
+ img.src=url;img.alt=label||"Imagen ampliada";title.textContent=label||"Imagen";
+ viewer.classList.add("open");
+}
+function closePhotoViewerV33(){
+ const viewer=document.getElementById("photoViewerV33");
+ if(!viewer)return;
+ viewer.classList.remove("open");
+ resetPhotoZoomV35();
+}
+
+async function loadAssetPhotosV34(e){
+ const ids=movementsForAssetV32(e).map(m=>String(m.id));
+ await loadPhotosForMovementsV34(ids);
+}
+
+let assetDetailIdV32=null;
+let assetDetailClassV32=null;
+
+function assetKindV32(value){
+ return String(value||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+}
+function findAssetV32(id,kind){
+ const k=assetKindV32(kind);
+ return db.equipment.find(e=>String(e.id)===String(id)&&assetKindV32(e.assetClass)===k)||null;
+}
+function movementsForAssetV32(e){
+ if(!e)return [];
+ return db.movements
+  .filter(m=>String(m.equipmentId)===String(e.id)&&assetKindV32(m.assetClass)===assetKindV32(e.assetClass))
+  .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+}
+function activeDeliveryV32(e){
+ return movementsForAssetV32(e).find(m=>m.type==="delivery")||null;
+}
+function formatDateOnlyV32(value){
+ if(!value)return "—";
+ const local=parseLocalDateV28(value);
+ if(local)return local.toLocaleDateString("es-PA",{day:"2-digit",month:"2-digit",year:"numeric"});
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?esc(String(value)):d.toLocaleDateString("es-PA",{day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function detailFieldV32(label,value){
+ const text=(value===0||value)?String(value).trim():"";
+ return `<div class="asset-detail-field"><span>${esc(label)}</span><b>${text?esc(text):"—"}</b></div>`;
+}
+function deliveryFieldsV32(m,e){
+ const f=m?.form||{};
+ return [
+  ["Fecha de entrega",formatDateOnlyV32(f.fechaEntrega||m?.date)],
+  ["Fecha de devolución",formatDateOnlyV32(f.fechaDevolucion||e?.dueDate)],
+  ["Finca",f.finca||m?.finca||e?.finca||""],
+  ["Labor",f.labor||f.actividad||f.trabajo||m?.labor||""],
+  ["Asignado a",f.recibidoOperador||m?.operator||e?.assignedTo||f.recibidoPorCampo||""],
+  ["Entregado por Taller",f.entregadoPorTaller||""],
+  ["Recibido por Campo",f.recibidoPorCampo||""],
+  ["Operador",f.recibidoOperador||m?.operator||""],
+  ["N.º de registro",m?.code||f.id||m?.id||""]
+ ];
+}
+function deliveryInspectionV32(m,kind){
+ const f=m?.form||{};
+ if(kind==="IMPLEMENTO"){
+  return [
+   ["Estado general",f.estadoGeneralImplemento||""],
+   ["Presenta daños",f.tieneDanos||""],
+   ["Observación",f.observacion||""]
+  ].filter(x=>String(x[1]||"").trim());
+ }
+ return inspectionNames.map(([key,label])=>[label,f[key]||""]).filter(x=>String(x[1]||"").trim());
+}
+function deliveryExtraSummaryV32(m,kind){
+ const f=m?.form||{};
+ const rows=[];
+ if(kind==="EQUIPO"){
+  if(f.nivelAceiteHidraulico)rows.push(["Aceite hidráulico",f.nivelAceiteHidraulico]);
+  if(f.nivelCombustible)rows.push(["Combustible",f.nivelCombustible]);
+  if(f.tieneDanos)rows.push(["Presenta daños",f.tieneDanos]);
+ }
+ return rows;
+}
+function historyMovementDetailsV32(m,e){
+ const kind=assetKindV32(m.assetClass||e.assetClass);
+ if(m.type==="delivery"){
+  const fields=deliveryFieldsV32(m,e).slice(0,7);
+  const f=m.form||{};
+  const note=f.observacion||f.detalleDanos||f.descripcionDanos||"";
+  return `<div class="asset-history-details"><div class="asset-detail-grid">${fields.map(([a,b])=>detailFieldV32(a,b)).join("")}</div>${note?`<div class="asset-detail-note">${esc(note)}</div>`:""}${movementPhotoGalleryV33(m.id,kind,true)}</div>`;
+ }
+ return `<div class="asset-history-details"><div class="asset-detail-grid">${detailFieldV32("Condición",m.condition||"")}${detailFieldV32("Finca",m.finca||e.finca||"")}${detailFieldV32("Operador",m.operator||"")}${detailFieldV32("Registro",m.id||"")}</div>${m.notes?`<div class="asset-detail-note">${esc(m.notes)}</div>`:""}${movementPhotoGalleryV33(m.id,kind,true)}</div>`;
+}
+function renderAssetHistoryV32(e){
+ const rows=movementsForAssetV32(e);
+ if(!rows.length)return '<div class="asset-detail-empty">Este activo todavía no tiene movimientos registrados.</div>';
+ return `<div class="asset-history-wrap">${rows.map(m=>{
+  const typeText=m.type==="delivery"?"ENTREGA":"DEVOLUCIÓN";
+  const dateText=formatDateTime(m.date);
+  const subtitle=m.type==="delivery"
+   ?`${esc(m.finca||e.finca||"SIN FINCA")} · ${esc(m.operator||"Sin responsable")}`
+   :`${esc(m.condition||"Sin condición")}${m.operator?" · "+esc(m.operator):""}`;
+  return `<div class="asset-history-item"><span class="asset-history-dot"></span><div class="asset-history-card"><div class="asset-history-main"><strong>${typeText} · ${esc(e.id)}</strong><small>${dateText}<br>${subtitle}</small></div><details><summary>VER DETALLE DEL MOVIMIENTO</summary>${historyMovementDetailsV32(m,e)}</details></div></div>`;
+ }).join("")}</div>`;
+}
+function openReturnFromDetailV32(){
+ const e=findAssetV32(assetDetailIdV32,assetDetailClassV32);
+ if(e&&e.status==="assigned")openReturn(e.id,e.assetClass);
+}
+function editActiveLoanFromDetailV32(){
+ const e=findAssetV32(assetDetailIdV32,assetDetailClassV32);
+ const m=e?activeDeliveryV32(e):null;
+ if(!m){toast("No se encontró la entrega activa");return;}
+ openLoanEditorV28(m.id);
+}
+function renderAssetDetailV32(){
+ const box=document.getElementById("assetDetailContent");
+ if(!box)return;
+ const e=findAssetV32(assetDetailIdV32,assetDetailClassV32);
+ if(!e){box.innerHTML='<div class="asset-detail-empty">No se encontró el activo.</div>';return;}
+ updateEquipmentDueStates();
+ const kind=assetKindV32(e.assetClass);
+ const delivery=activeDeliveryV32(e);
+ const overdue=e.status==="assigned"&&typeof e.dueDays==="number"&&e.dueDays<0;
+ const statusClass=e.status==="available"?"available":overdue?"overdue":"assigned";
+ const statusText=e.status==="available"?"DISPONIBLE":overdue?"VENCIDO":"ASIGNADO";
+ const icon=kind==="IMPLEMENTO"?'<i data-lucide="wrench"></i>':'<i data-lucide="tractor"></i>';
+ const deliveryFields=delivery?deliveryFieldsV32(delivery,e):[];
+ const inspection=delivery?deliveryInspectionV32(delivery,kind):[];
+ const extras=delivery?deliveryExtraSummaryV32(delivery,kind):[];
+ const form=delivery?.form||{};
+ const note=form.observacion||form.descripcionDanos||"";
+ const actionButtons=e.status==="assigned"?`<div class="asset-detail-actions"><button class="asset-detail-return" type="button" onclick="openReturnFromDetailV32()">REGISTRAR DEVOLUCIÓN</button>${isAdmin()&&delivery?'<button class="asset-detail-edit" type="button" onclick="editActiveLoanFromDetailV32()">EDITAR PRÉSTAMO</button>':''}</div>`:"";
+ box.innerHTML=`
+  <div class="asset-detail-hero">
+   <div class="asset-detail-top">
+    <div class="asset-detail-photo${e.photo?' has-photo':''}" ${e.photo?`onclick="openPhotoViewerV33(decodeURIComponent('${encodeURIComponent(e.photo)}'),decodeURIComponent('${encodeURIComponent(e.id+' - '+e.type)}'))"`:''}>${e.photo?`<img src="${esc(e.photo)}" alt="${esc(e.type)}">`:icon}</div>
+    <div class="asset-detail-title"><h2>${esc(e.id)} - ${esc(e.type)}</h2><p>${esc(kind)} · ${esc(e.finca||"SIN FINCA")}</p><span class="status ${statusClass}">${statusText}</span></div>
+   </div>
+   ${actionButtons}
+  </div>
+  <div class="asset-detail-section">
+   <div class="asset-detail-section-head"><h3>Detalles de la entrega actual</h3><small>${delivery?"Préstamo activo":"Sin entrega activa"}</small></div>
+   ${delivery?`<div class="asset-detail-grid">${deliveryFields.map(([a,b])=>detailFieldV32(a,b)).join("")}${extras.map(([a,b])=>detailFieldV32(a,b)).join("")}</div>${note?`<div class="asset-detail-note">${esc(note)}</div>`:""}${movementPhotoGalleryV33(delivery.id,kind,false)}`:'<div class="asset-detail-empty">No hay una entrega activa para mostrar.</div>'}
+  </div>
+  ${inspection.length?`<div class="asset-detail-section"><div class="asset-detail-section-head"><h3>${kind==="IMPLEMENTO"?"Estado registrado":"Inspección de entrega"}</h3><small>${inspection.length} dato(s)</small></div><div class="asset-inspection-list">${inspection.map(([label,value])=>`<div class="asset-inspection-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join("")}</div></div>`:""}`;
+ refreshIcons();
+}
+async function openAssetDetailV32(id,assetClass){
+ assetDetailIdV32=String(id);
+ assetDetailClassV32=assetKindV32(assetClass);
+ go("assetDetail");
+ const e=findAssetV32(assetDetailIdV32,assetDetailClassV32);
+ if(!e)return;
+ renderAssetDetailV32();
+ await loadAssetPhotosV34(e);
+ if(String(assetDetailIdV32)===String(e.id)&&assetDetailClassV32===assetKindV32(e.assetClass)){
+  renderAssetDetailV32();
+ }
+}
+
+/* Reemplaza el comportamiento anterior: los asignados ya no abren
+   directamente el modal de devolución. */
+function showEquipment(id,assetClass){
+ const e=findAssetV32(id,assetClass);if(!e)return;
+ if(e.status==="assigned"){
+  openAssetDetailV32(e.id,e.assetClass);
+  return;
+ }
+ if(e.assetClass==="IMPLEMENTO"){
+  go("implement");
+  setPickerValue("implementNumero","implementNumeroTrigger",e.id);
+  showImplementSelected(e.id);
+ }else{
+  go("delivery");
+  setPickerValue("numeroEquipo","numeroEquipoTrigger",e.id);
+ }
+}
+
+
+
+/* ==========================================================
+   V38 — DETALLE DEL ACTIVO SIN HISTORIAL
+   El historial general de la app se conserva, pero ya no se
+   renderiza ni se enlaza desde la ficha de detalle del activo.
+   ========================================================== */
+
+/* ==========================================================
+   V36 — CONSULTAS BAJO DEMANDA PARA REDUCIR EGRESS DE SUPABASE
+   1) La sincronización general usa app_sync_data_ligero y NO trae formulario.
+   2) El detalle completo se consulta únicamente al abrir el activo seleccionado.
+   3) Las fotografías NO se consultan al abrir el detalle: solo al pulsar VER.
+   ========================================================== */
+const assetDetailCacheV36=new Map();
+let warnedSqlV36=false;
+
+function isMissingRpcV36(error,name){
+ const msg=String(error?.message||error?.details||'').toLowerCase();
+ return String(error?.code||'')==='PGRST202'||msg.includes(String(name||'').toLowerCase());
+}
+function movementLaborV41(m){
+ const f=m?.form||m?.formulario||{};
+ return String(
+  m?.labor||m?.actividad||m?.trabajo||
+  f?.labor||f?.LABOR||f?.actividad||f?.trabajo||
+  f?.laborRealizar||f?.labor_realizar||f?.tipoLabor||f?.tipo_labor||''
+ ).trim();
+}
+function mapMovementV36(m){
+ const mapped={
+  id:m.id,
+  code:m.codigo_formulario||'',
+  type:m.tipo_movimiento,
+  equipmentId:String(m.activo_codigo),
+  assetClass:m.clase_activo||'EQUIPO',
+  date:m.fecha_evento,
+  finca:m.finca||'',
+  operator:m.operador||'',
+  condition:m.condicion||'',
+  notes:m.notas||'',
+  labor:'',
+  form:m.formulario||{}
+ };
+ mapped.labor=movementLaborV41({...m,form:mapped.form});
+ return mapped;
+}
+function assetLaborV41(e){
+ const direct=String(e?.labor||'').trim();
+ if(direct)return direct;
+ const code=String(e?.id||'');
+ const kind=assetKindV32(e?.assetClass);
+ const latest=[...db.movements]
+  .filter(m=>String(m.equipmentId)===code&&assetKindV32(m.assetClass)===kind&&String(m.type||'').toLowerCase()==='delivery')
+  .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0))[0];
+ return latest?movementLaborV41(latest):'';
+}
+function applySyncPayloadV36(data){
+ const activos=data?.activos||[];
+ const movimientos=data?.movimientos||[];
+ const personal=data?.personal||[];
+ const firmas=data?.firmas||[];
+
+ db.equipment=activos.map(a=>({
+  id:String(a.codigo),type:a.tipo||'Equipo',assetClass:a.clase_activo||'EQUIPO',
+  finca:a.finca||'',status:a.estado||'available',dueDate:a.fecha_devolucion||null,dueDays:null,
+  assignedTo:a.asignado_a||null,photo:a.foto_url||'',custom:!!a.personalizado,
+  labor:String(a.labor||a.actividad||a.trabajo||'').trim()
+ }));
+ db.movements=movimientos.map(mapMovementV36);
+
+ cloudPersonnelRows=personal;
+ personnelLists={taller:[],campo:[],operador:[]};
+ cloudPersonnelRows.forEach(p=>{if(personnelLists[p.categoria])personnelLists[p.categoria].push(p.nombre);});
+ Object.keys(signatureStore).forEach(k=>signatureStore[k]={});
+ const peopleById=new Map(cloudPersonnelRows.map(p=>[p.id,p]));
+ firmas.forEach(f=>{
+  const person=peopleById.get(f.personal_id);
+  if(person&&signatureStore[person.categoria])signatureStore[person.categoria][person.nombre]=f.firma_data_url||'';
+ });
+ localStorage.setItem(PERSONNEL_KEY,JSON.stringify(personnelLists));
+ localStorage.setItem(SIGNATURE_STORE_KEY,JSON.stringify(signatureStore));
+ updateEquipmentDueStates();
+}
+
+/* Sincronización liviana: evita traer formulario e imágenes de todos los movimientos. */
+async function syncFromSupabase(){
+ if(!sb||!customSessionToken)return;
+ let res=await sb.rpc('app_sync_data_ligero',{p_token:customSessionToken});
+ if(res.error&&isMissingRpcV36(res.error,'app_sync_data_ligero')){
+  // Compatibilidad: la app sigue funcionando, pero para ahorrar egress hay que instalar SQL V36.
+  if(!warnedSqlV36){warnedSqlV36=true;console.warn('Falta SQL V36: usando app_sync_data completo como compatibilidad.');}
+  res=await sb.rpc('app_sync_data',{p_token:customSessionToken});
+ }
+ if(res.error)throw res.error;
+ let data=res.data||{};
+
+ if((data.activos||[]).length===0&&isAdmin()){
+  await seedCatalogIfEmpty();
+  let retry=await sb.rpc('app_sync_data_ligero',{p_token:customSessionToken});
+  if(retry.error&&isMissingRpcV36(retry.error,'app_sync_data_ligero'))retry=await sb.rpc('app_sync_data',{p_token:customSessionToken});
+  if(retry.error)throw retry.error;
+  data=retry.data||{};
+ }
+
+ const migrated=await migrateLegacyEquipmentPhotosV25(data.activos||[]);
+ if(migrated){
+  let retry=await sb.rpc('app_sync_data_ligero',{p_token:customSessionToken});
+  if(retry.error&&isMissingRpcV36(retry.error,'app_sync_data_ligero'))retry=await sb.rpc('app_sync_data',{p_token:customSessionToken});
+  if(retry.error)throw retry.error;
+  data=retry.data||{};
+ }
+
+ assetDetailCacheV36.clear();
+ applySyncPayloadV36(data);
+ saveDB();
+}
+
+function detailCacheKeyV36(id,kind){return `${assetKindV32(kind)}|${String(id)}`;}
+function replaceAssetMovementsV36(id,kind,rows){
+ const k=assetKindV32(kind),code=String(id);
+ db.movements=db.movements.filter(m=>!(String(m.equipmentId)===code&&assetKindV32(m.assetClass)===k));
+ db.movements.push(...(rows||[]).map(mapMovementV36));
+}
+
+async function fetchAssetDetailsV36(e){
+ const key=detailCacheKeyV36(e.id,e.assetClass);
+ if(assetDetailCacheV36.has(key)){
+  replaceAssetMovementsV36(e.id,e.assetClass,assetDetailCacheV36.get(key));
+  return;
+ }
+
+ let rows=null;
+ let rpc=await sb.rpc('app_detalle_activo',{
+  p_token:customSessionToken,
+  p_codigo:String(e.id),
+  p_clase_activo:assetKindV32(e.assetClass)
+ });
+ if(!rpc.error){
+  rows=Array.isArray(rpc.data)?rpc.data:(rpc.data?.movimientos||[]);
+ }else if(isMissingRpcV36(rpc.error,'app_detalle_activo')){
+  // Segundo intento: consulta directa y filtrada solo al activo seleccionado.
+  try{
+   const direct=await sb.from('movimientos')
+    .select('id,codigo_formulario,tipo_movimiento,activo_codigo,clase_activo,fecha_evento,finca,operador,condicion,notas,formulario')
+    .eq('activo_codigo',String(e.id))
+    .eq('clase_activo',assetKindV32(e.assetClass))
+    .order('fecha_evento',{ascending:false});
+   if(!direct.error)rows=direct.data||[];
+  }catch(_e){}
+
+  // Último respaldo de compatibilidad. Este camino no conserva el ahorro de egress.
+  if(rows===null){
+   const full=await sb.rpc('app_sync_data',{p_token:customSessionToken});
+   if(full.error)throw full.error;
+   rows=(full.data?.movimientos||[]).filter(m=>
+    String(m.activo_codigo)===String(e.id)&&assetKindV32(m.clase_activo)===assetKindV32(e.assetClass)
+   );
+  }
+ }else{
+  throw rpc.error;
+ }
+
+ rows=rows||[];
+ assetDetailCacheV36.set(key,rows);
+ replaceAssetMovementsV36(e.id,e.assetClass,rows);
+}
+
+function renderAssetDetailLoadingV36(e){
+ const box=document.getElementById('assetDetailContent');
+ if(!box)return;
+ box.innerHTML=`<div class="asset-detail-section"><div class="asset-detail-loading-v36"><div class="spinner-v36"></div>Consultando únicamente los detalles de ${esc(e.id)} - ${esc(e.type)}…</div></div>`;
+}
+
+/* Las fotos se consultan exclusivamente al pulsar VER. */
+async function loadPhotosForMovementsV34(movementIds=[]){
+ const ids=[...new Set((movementIds||[]).map(String).filter(Boolean))];
+ const missing=ids.filter(id=>!movementPhotoLoadedV34.has(id)&&!movementPhotoLoadingV34.has(id));
+ if(!missing.length)return;
+ missing.forEach(id=>movementPhotoLoadingV34.add(id));
+
+ try{
+  for(const movementId of missing){
+   let gotRows=false;
+
+   // RPC V36: devuelve únicamente metadata de fotos del movimiento solicitado.
+   try{
+    const r=await sb.rpc('app_fotos_movimiento',{p_token:customSessionToken,p_movimiento_id:movementId});
+    if(!r.error){
+     const rows=Array.isArray(r.data)?r.data:(r.data?.fotos||[]);
+     if(rows?.length){mergeMovementPhotosV34(rows);gotRows=true;}
+    }else if(!isMissingRpcV36(r.error,'app_fotos_movimiento')){
+     console.warn('app_fotos_movimiento:',r.error);
+    }
+   }catch(_e){}
+
+   // Compatibilidad: consulta directa, siempre filtrada a un único movimiento.
+   if(!gotRows){
+    try{
+     const {data,error}=await sb.from('fotos_movimiento').select('*').eq('movimiento_id',movementId);
+     if(!error&&Array.isArray(data)&&data.length){mergeMovementPhotosV34(data);gotRows=true;}
+    }catch(_e){}
+   }
+
+   // Respaldo Storage, también restringido a la carpeta del movimiento seleccionado.
+   if(!gotRows&&sb){
+    const bucket=typeof PHOTO_BUCKET_V25!=='undefined'?PHOTO_BUCKET_V25:'entrega-equipos';
+    const folders=[`registros/${movementId}`];
+    if(currentUser?.id)folders.push(`${currentUser.id}/${movementId}`);
+    for(const folder of folders){
+     try{
+      const {data,error}=await sb.storage.from(bucket).list(folder,{limit:100,sortBy:{column:'name',order:'asc'}});
+      if(error||!Array.isArray(data)||!data.length)continue;
+      const rows=data.filter(x=>x?.name&&!x.name.endsWith('/')).map(file=>{
+       const storagePath=`${folder}/${file.name}`;
+       const pub=sb.storage.from(bucket).getPublicUrl(storagePath)?.data?.publicUrl||'';
+       return {movimiento_id:movementId,posicion:photoPositionFromFilenameV34(file.name),storage_path:storagePath,foto_url:pub,id:file.id||`${movementId}-${file.name}`,created_at:file.created_at||file.updated_at||''};
+      });
+      if(rows.length){mergeMovementPhotosV34(rows);gotRows=true;break;}
+     }catch(_e){}
+    }
+   }
+
+   const m=db.movements.find(x=>String(x.id)===movementId);
+   if(m)mergeMovementPhotosV34(legacyPhotosFromFormV34(m));
+  }
+ }finally{
+  missing.forEach(id=>{movementPhotoLoadingV34.delete(id);movementPhotoLoadedV34.add(id);});
+ }
+}
+
+function refreshMovementPhotoGalleriesV36(movementId){
+ const id=String(movementId);
+ document.querySelectorAll('.asset-photo-block[data-photo-movement]').forEach(el=>{
+  if(String(el.dataset.photoMovement)!==id)return;
+  const kind=el.dataset.photoKind||'EQUIPO';
+  const compact=el.dataset.photoCompact==='1';
+  el.outerHTML=movementPhotoGalleryV33(id,kind,compact);
+ });
+ refreshIcons();
+}
+async function loadMovementPhotosOnDemandV36(movementId,kind){
+ const id=String(movementId||'');
+ if(!id||movementPhotoLoadingV34.has(id)||movementPhotoLoadedV34.has(id))return;
+ movementPhotoLoadingV34.add(id);
+ refreshMovementPhotoGalleriesV36(id);
+ // La función remueve el flag de loading al finalizar.
+ movementPhotoLoadingV34.delete(id);
+ await loadPhotosForMovementsV34([id]);
+ refreshMovementPhotoGalleriesV36(id);
+}
+
+function movementPhotoGalleryV33(movementId,kind='EQUIPO',compact=false){
+ const id=String(movementId||'');
+ const photos=movementPhotosForV33(id);
+ const loading=movementPhotoLoadingV34.has(id);
+ const loaded=movementPhotoLoadedV34.has(id);
+ const movementV37=db.movements.find(m=>String(m.id)===id)||historySearchStateV39?.selected?.rows?.find?.(m=>String(m.id)===id);
+ const isReturnV37=/return|devol/i.test(String(movementV37?.type||''));
+ const title=compact?(isReturnV37?'FOTOS DEVOLUCIÓN':'FOTOGRAFÍAS'):(isReturnV37?'Fotografías de la devolución':'Fotografías de la entrega');
+ const encodedId=encodeURIComponent(id),encodedKind=encodeURIComponent(kind);
+ const attrs=`data-photo-movement="${esc(id)}" data-photo-kind="${esc(kind)}" data-photo-compact="${compact?'1':'0'}"`;
+
+ if(!loaded&&!photos.length){
+  return `<div class="asset-photo-block${compact?' compact':''}" ${attrs}><div class="asset-photo-title"><strong>${title}</strong><div class="asset-photo-title-actions"><small>No consultadas</small><button class="asset-photo-view-btn" type="button" onclick="loadMovementPhotosOnDemandV36(decodeURIComponent('${encodedId}'),decodeURIComponent('${encodedKind}'))">VER</button></div></div><div class="asset-photo-status"><i data-lucide="image" aria-hidden="true"></i><span>Las imágenes se cargarán solo cuando pulses VER.</span></div></div>`;
+ }
+ if(loading){
+  return `<div class="asset-photo-block${compact?' compact':''}" ${attrs}><div class="asset-photo-title"><strong>${title}</strong><div class="asset-photo-title-actions"><small>Consultando…</small><button class="asset-photo-view-btn" type="button" disabled>VER</button></div></div><div class="asset-photo-status"><span>Consultando fotografías de este registro…</span></div></div>`;
+ }
+ if(!photos.length){
+  return `<div class="asset-photo-block${compact?' compact':''}" ${attrs}><div class="asset-photo-title"><strong>${title}</strong><small>0 foto(s)</small></div><div class="asset-photo-status"><i data-lucide="image" aria-hidden="true"></i><span>No hay fotografías guardadas para este registro.</span></div></div>`;
+ }
+ return `<div class="asset-photo-block${compact?' compact':''}" ${attrs}><div class="asset-photo-title"><strong>${title}</strong><small>${photos.length} foto(s)</small></div><div class="asset-photo-grid">${photos.map(p=>{
+  const label=movementPhotoLabelV33(p.position,kind);
+  const u=encodeURIComponent(p.url),l=encodeURIComponent(label);
+  return `<button class="asset-photo-thumb" type="button" onclick="openPhotoViewerV33(decodeURIComponent('${u}'),decodeURIComponent('${l}'))"><span class="asset-photo-image"><img src="${esc(p.url)}" alt="${esc(label)}" loading="lazy" onerror="this.closest('button').classList.add('photo-error-v34')"></span><span>${esc(label)}</span></button>`;
+ }).join('')}</div></div>`;
+}
+
+/* Abrir detalle = una sola consulta del activo seleccionado. No consulta fotos. */
+async function openAssetDetailV32(id,assetClass){
+ assetDetailIdV32=String(id);
+ assetDetailClassV32=assetKindV32(assetClass);
+ go('assetDetail');
+ const e=findAssetV32(assetDetailIdV32,assetDetailClassV32);
+ if(!e)return;
+ renderAssetDetailLoadingV36(e);
+ try{
+  await fetchAssetDetailsV36(e);
+  if(String(assetDetailIdV32)===String(e.id)&&assetDetailClassV32===assetKindV32(e.assetClass))renderAssetDetailV32();
+ }catch(err){
+  console.error(err);
+  renderAssetDetailV32();
+  toast(customRpcError(err));
+ }
+}
+
+
+/* ==========================================================
+   V39 — HISTORIAL POR NÚMERO DE EQUIPO / BAJO DEMANDA
+   - Entrar a Historial NO consulta Supabase.
+   - Escribir NO consulta Supabase.
+   - BUSCAR consulta solo el activo solicitado.
+   - Abrir la card usa la respuesta en memoria, sin una segunda consulta.
+   - Las fotografías siguen consultándose únicamente al pulsar VER.
+   ========================================================== */
+const historySearchStateV39={
+ searched:false,
+ loading:false,
+ query:'',
+ results:[],
+ selected:null
+};
+
+function normalizeHistoryCodeV39(value){
+ return String(value||'').trim().toUpperCase().replace(/[-\s]+/g,'');
+}
+function historyAssetKeyV39(code,kind){
+ return `${normalizeHistoryCodeV39(code)}|${assetKindV32(kind)}`;
+}
+function localAssetsByCodeV39(code){
+ const wanted=normalizeHistoryCodeV39(code);
+ return db.equipment.filter(e=>normalizeHistoryCodeV39(e.id)===wanted);
+}
+async function queryAssetHistoryClassV39(code,kind){
+ const res=await sb.rpc('app_detalle_activo',{
+  p_token:customSessionToken,
+  p_codigo:String(code),
+  p_clase_activo:assetKindV32(kind)
+ });
+ if(res.error)throw res.error;
+ const raw=Array.isArray(res.data)?res.data:(res.data?.movimientos||[]);
+ return (raw||[]).map(mapMovementV36).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+}
+function buildHistoryResultV39(asset,kind,rows,code){
+ const movement=rows[0]||null;
+ return {
+  code:String(asset?.id||code),
+  kind:assetKindV32(asset?.assetClass||kind),
+  type:asset?.type||movement?.form?.tipoEquipo||movement?.form?.tipoImplemento||'Activo',
+  finca:asset?.finca||movement?.finca||'',
+  status:asset?.status||'',
+  assignedTo:asset?.assignedTo||movement?.operator||'',
+  rows
+ };
+}
+async function searchAssetHistoryV39(){
+ const input=document.getElementById('historySearch');
+ const btn=document.getElementById('historySearchBtnV39');
+ const code=normalizeHistoryCodeV39(input?.value);
+ if(!code){toast('Escribe el número del equipo');input?.focus();return;}
+ if(!customSessionToken||!sb){toast('No hay conexión activa con Supabase');return;}
+
+ historySearchStateV39.searched=true;
+ historySearchStateV39.loading=true;
+ historySearchStateV39.query=code;
+ historySearchStateV39.results=[];
+ historySearchStateV39.selected=null;
+ if(btn){btn.disabled=true;btn.innerHTML='<span class="history-spinner-v39" style="width:14px;height:14px;border-color:rgba(255,255,255,.35);border-top-color:#fff"></span> BUSCANDO';}
+ renderHistory();
+
+ try{
+  const local=localAssetsByCodeV39(code);
+  const candidates=local.length
+   ? [...new Map(local.map(e=>[assetKindV32(e.assetClass),e])).entries()].map(([kind,asset])=>({kind,asset}))
+   : [{kind:'EQUIPO',asset:null},{kind:'IMPLEMENTO',asset:null}];
+
+  const found=[];
+  for(const candidate of candidates){
+   try{
+    const rows=await queryAssetHistoryClassV39(code,candidate.kind);
+    if(rows.length||candidate.asset){
+     found.push(buildHistoryResultV39(candidate.asset,candidate.kind,rows,code));
+     // Si no había catálogo local y ya encontramos movimientos, evitamos una segunda consulta innecesaria.
+     if(!local.length&&rows.length)break;
+    }
+   }catch(err){
+    if(isMissingRpcV36(err,'app_detalle_activo')){
+     throw new Error('Falta instalar la función app_detalle_activo del SQL V36 en Supabase.');
+    }
+    throw err;
+   }
+  }
+  historySearchStateV39.results=found;
+ }catch(err){
+  console.error(err);
+  historySearchStateV39.results=[];
+  toast(customRpcError(err));
+ }finally{
+  historySearchStateV39.loading=false;
+  if(btn){btn.disabled=false;btn.innerHTML='<i data-lucide="search" aria-hidden="true"></i> BUSCAR';}
+  renderHistory();
+ }
+}
+function renderHistorySearchResultsV39(){
+ const box=document.getElementById('historyList');
+ if(!box)return;
+ const rows=historySearchStateV39.results||[];
+ if(!rows.length){
+  box.innerHTML=`<div class="history-empty-v39"><i data-lucide="circle-x"></i><div>No se encontró historial para <b>${esc(historySearchStateV39.query)}</b>.</div></div>`;
+  refreshIcons();
+  return;
+ }
+ box.innerHTML=rows.map((r,index)=>{
+  const icon=r.kind==='IMPLEMENTO'?'wrench':'tractor';
+  const movementText=r.rows.length===1?'1 movimiento':`${r.rows.length} movimientos`;
+  const latest=r.rows[0];
+  const latestText=latest?`Último registro: ${formatDateTime(latest.date)}`:'Sin movimientos registrados';
+  return `<button class="history-asset-card-v39" type="button" onclick="openHistoryDetailV39(${index})">
+   <span class="history-asset-icon-v39"><i data-lucide="${icon}" aria-hidden="true"></i></span>
+   <span class="history-asset-copy-v39"><strong>${esc(r.code)} - ${esc(r.type)}</strong><small>${esc(r.kind)}${r.finca?' · '+esc(r.finca):''}<br>${latestText}</small><span class="history-count-v39">${movementText}</span></span>
+   <span class="history-asset-chevron-v39"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+  </button>`;
+ }).join('');
+ refreshIcons();
+}
+function openHistoryDetailV39(index){
+ const result=historySearchStateV39.results?.[Number(index)];
+ if(!result)return;
+ historySearchStateV39.selected=result;
+ go('historyDetail');
+}
+function fullHistoryMovementDetailsV39(m,result){
+ const pseudoAsset={
+  id:result.code,
+  type:result.type,
+  assetClass:result.kind,
+  finca:result.finca,
+  assignedTo:result.assignedTo,
+  dueDate:null
+ };
+ const kind=result.kind;
+ if(m.type==='delivery'){
+  const fields=deliveryFieldsV32(m,pseudoAsset);
+  const extras=deliveryExtraSummaryV32(m,kind);
+  const inspection=deliveryInspectionV32(m,kind);
+  const f=m.form||{};
+  const note=f.observacion||f.descripcionDanos||m.notes||'';
+  return `<div class="asset-detail-grid">${fields.map(([a,b])=>detailFieldV32(a,b)).join('')}${extras.map(([a,b])=>detailFieldV32(a,b)).join('')}</div>
+   ${note?`<div class="asset-detail-note">${esc(note)}</div>`:''}
+   ${inspection.length?`<div class="history-inspection-v39"><h4>${kind==='IMPLEMENTO'?'Estado registrado':'Inspección de entrega'}</h4><div class="asset-inspection-list">${inspection.map(([label,value])=>`<div class="asset-inspection-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join('')}</div></div>`:''}
+   ${movementPhotoGalleryV33(m.id,kind,false)}`;
+ }
+ return `<div class="asset-detail-grid">
+  ${detailFieldV32('Fecha de devolución',formatDateTime(m.date))}
+  ${detailFieldV32('Condición',m.condition||'')}
+  ${detailFieldV32('Finca',m.finca||result.finca||'')}
+  ${detailFieldV32('Operador',m.operator||'')}
+  ${detailFieldV32('N.º de registro',m.code||m.id||'')}
+ </div>${m.notes?`<div class="asset-detail-note">${esc(m.notes)}</div>`:''}${movementPhotoGalleryV33(m.id,kind,false)}`;
+}
+function renderHistoryDetailV39(){
+ const box=document.getElementById('historyDetailContentV39');
+ if(!box)return;
+ const result=historySearchStateV39.selected;
+ if(!result){
+  box.innerHTML='<div class="history-empty-v39">No hay un equipo seleccionado.</div>';
+  refreshIcons();
+  return;
+ }
+ const deliveries=result.rows.filter(m=>m.type==='delivery').length;
+ const returns=result.rows.filter(m=>/return|devol/i.test(String(m.type||''))).length;
+ box.innerHTML=`
+  <div class="history-detail-hero-v39">
+   <h2>${esc(result.code)} - ${esc(result.type)}</h2>
+   <p>${esc(result.kind)}${result.finca?' · '+esc(result.finca):''}${result.assignedTo?' · '+esc(result.assignedTo):''}</p>
+   <div class="history-detail-summary-v39"><span>${result.rows.length} MOVIMIENTO(S)</span><span>${deliveries} ENTREGA(S)</span><span>${returns} DEVOLUCIÓN(ES)</span></div>
+  </div>
+  ${result.rows.length?`<div class="history-list-v39">${result.rows.map(m=>{
+   const isReturn=/return|devol/i.test(String(m.type||''));
+   const title=isReturn?'DEVOLUCIÓN':'ENTREGA';
+   const subtitle=isReturn?(m.condition||m.finca||'Movimiento registrado'):(m.finca||m.operator||'Movimiento registrado');
+   return `<article class="history-movement-v39">
+    <div class="history-movement-head-v39"><div><strong>${title} · ${esc(result.code)} - ${esc(result.type)}</strong><small>${formatDateTime(m.date)}${subtitle?' · '+esc(subtitle):''}</small></div><span class="history-movement-type-v39 ${isReturn?'return':'delivery'}">${title}</span></div>
+    ${fullHistoryMovementDetailsV39(m,result)}
+   </article>`;
+  }).join('')}</div>`:'<div class="history-empty-v39">Este activo no tiene movimientos registrados.</div>'}`;
+ refreshIcons();
+}
+
+/* ==========================================================
+   V37 — DEVOLUCIÓN CON 4 FOTOGRAFÍAS OBLIGATORIAS
+   ========================================================== */
+function resetReturnPhotosV37(){
+ document.querySelectorAll('#returnPhotoFields input[data-return-photo]').forEach(input=>{
+  input.value='';
+  const box=input.closest('.photo-box');
+  const img=box?.querySelector('img');
+  const ph=box?.querySelector('.photo-placeholder');
+  if(img){
+   if(img.dataset.objectUrl){try{URL.revokeObjectURL(img.dataset.objectUrl)}catch(_e){}}
+   img.removeAttribute('src');
+   img.dataset.objectUrl='';
+   img.style.display='none';
+  }
+  if(ph)ph.style.display='';
+ });
+}
+
+function validateReturnPhotosV37(){
+ const inputs=[...document.querySelectorAll('#returnPhotoFields input[data-return-photo]')];
+ const missing=inputs.filter(input=>!input.files?.[0]);
+ if(!missing.length)return true;
+ toast(`Faltan ${missing.length} de las 4 fotografías de devolución`);
+ const section=document.getElementById('returnPhotosSectionV37');
+ section?.scrollIntoView({behavior:'smooth',block:'center'});
+ const firstBox=missing[0]?.closest('.photo-box');
+ if(firstBox){
+  firstBox.animate?.([{outline:'2px solid #e30613'},{outline:'2px solid transparent'}],{duration:900,iterations:2});
+ }
+ return false;
+}
+
+function extractMovementIdV37(data){
+ if(!data)return '';
+ if(typeof data==='string'||typeof data==='number')return String(data);
+ if(Array.isArray(data)){
+  for(const item of data){const id=extractMovementIdV37(item);if(id)return id;}
+  return '';
+ }
+ if(typeof data==='object'){
+  for(const key of ['movimiento_id','movement_id','id_movimiento','id']){
+   if(data[key])return String(data[key]);
+  }
+  for(const key of ['movimiento','data','resultado','result']){
+   if(data[key]){const id=extractMovementIdV37(data[key]);if(id)return id;}
+  }
+ }
+ return '';
+}
+
+async function resolveReturnMovementIdV37(rpcData,e){
+ const directId=extractMovementIdV37(rpcData);
+ if(directId)return directId;
+
+ // Consulta mínima: solo busca el movimiento más reciente del activo devuelto.
+ try{
+  const q=await sb.from('movimientos')
+   .select('id,tipo_movimiento,fecha_evento')
+   .eq('activo_codigo',String(e.id))
+   .eq('clase_activo',assetKindV32(e.assetClass))
+   .order('fecha_evento',{ascending:false})
+   .limit(5);
+  if(!q.error&&Array.isArray(q.data)&&q.data.length){
+   const returnRow=q.data.find(r=>/return|devol/i.test(String(r.tipo_movimiento||'')))||q.data[0];
+   if(returnRow?.id)return String(returnRow.id);
+  }
+ }catch(_e){}
+
+ // Respaldo RPC filtrado al activo seleccionado.
+ try{
+  const r=await sb.rpc('app_detalle_activo',{
+   p_token:customSessionToken,
+   p_codigo:String(e.id),
+   p_clase_activo:assetKindV32(e.assetClass)
+  });
+  if(!r.error){
+   const rows=Array.isArray(r.data)?r.data:(r.data?.movimientos||[]);
+   const sorted=[...(rows||[])].sort((a,b)=>new Date(b.fecha_evento||b.date||0)-new Date(a.fecha_evento||a.date||0));
+   const row=sorted.find(x=>/return|devol/i.test(String(x.tipo_movimiento||x.type||'')))||sorted[0];
+   if(row?.id)return String(row.id);
+  }
+ }catch(_e){}
+ return '';
+}
+
+async function uploadReturnPhotosV37(movementId){
+ if(!movementId||!customSessionToken)return 4;
+ const inputs=[...document.querySelectorAll('#returnPhotoFields input[data-return-photo]')];
+ let warnings=0;
+
+ for(const input of inputs){
+  const file=input.files?.[0];
+  if(!file){warnings++;continue;}
+  const pos=input.dataset.returnPhoto||'devolucion';
+  try{
+   const blob=await compressPhotoBlobV25(file,1600,.82);
+   const safePos=safeStorageNameV25(pos);
+   const path=`registros/${movementId}/${safePos}-${Date.now()}-${Math.random().toString(16).slice(2,8)}.jpg`;
+   const publicUrl=await uploadPublicPhotoV25(blob,path);
+   const {error:metaError}=await sb.rpc('app_registrar_foto',{
+    p_token:customSessionToken,
+    p_movimiento_id:movementId,
+    p_posicion:pos,
+    p_storage_path:path,
+    p_foto_url:publicUrl,
+    p_mime_type:'image/jpeg'
+   });
+   if(metaError){console.warn('No se pudo registrar metadata de foto de devolución:',metaError);warnings++;}
+  }catch(err){
+   console.warn('No se pudo subir foto de devolución:',pos,err);
+   warnings++;
+  }
+ }
+ return warnings;
+}
+
+// Mejora la previsualización y evita conservar object URLs anteriores.
+document.querySelectorAll('#returnPhotoFields input[data-return-photo]').forEach(input=>{
+ input.addEventListener('change',()=>{
+  const file=input.files?.[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Selecciona una imagen válida');input.value='';return;}
+  const box=input.closest('.photo-box');
+  const img=box?.querySelector('img');
+  const ph=box?.querySelector('.photo-placeholder');
+  if(img){
+   if(img.dataset.objectUrl){try{URL.revokeObjectURL(img.dataset.objectUrl)}catch(_e){}}
+   const objectUrl=URL.createObjectURL(file);
+   img.dataset.objectUrl=objectUrl;
+   img.src=objectUrl;
+   img.style.display='block';
+  }
+  if(ph)ph.style.display='none';
+ });
+});
+
+// Sobrescribe openReturn para limpiar siempre la evidencia de una devolución anterior.
+const openReturnBeforeV37=openReturn;
+openReturn=function(id,assetClass){
+ resetReturnPhotosV37();
+ return openReturnBeforeV37(id,assetClass);
+};
+
+const closeReturnModalBeforeV37=closeReturnModal;
+closeReturnModal=function(){
+ closeReturnModalBeforeV37();
+ resetReturnPhotosV37();
+};
+
+// Última definición efectiva de confirmReturn.
+async function confirmReturn(){
+ const cond=document.getElementById('returnCondition').value;
+ if(!cond){toast('Selecciona el estado del equipo');return;}
+ if(!validateReturnPhotosV37())return;
+ if(!customSessionToken||!sb){toast('No hay conexión activa con Supabase');return;}
+
+ const e=db.equipment.find(x=>String(x.id)===String(returnEquipmentId)&&assetKindV32(x.assetClass)===assetKindV32(returnAssetClass));
+ if(!e){toast('No se encontró el activo seleccionado');return;}
+
+ const notes=document.getElementById('returnNotes').value||null;
+ const confirmBtn=document.querySelector('#returnModal .primary');
+ if(confirmBtn){confirmBtn.disabled=true;confirmBtn.textContent='GUARDANDO…';}
+
+ try{
+  const {data,error}=await sb.rpc('app_registrar_devolucion',{
+   p_token:customSessionToken,
+   p_activo_codigo:e.id,
+   p_clase_activo:e.assetClass,
+   p_condicion:cond,
+   p_notas:notes
+  });
+  if(error){toast(customRpcError(error));return;}
+
+  const movementId=await resolveReturnMovementIdV37(data,e);
+  if(!movementId){
+   toast('La devolución se guardó, pero no fue posible identificar el movimiento para subir las fotos');
+   await syncFromSupabase();
+   renderAll();
+   return;
+  }
+
+  const warnings=await uploadReturnPhotosV37(movementId);
+  movementPhotoLoadedV34.delete(String(movementId));
+  movementPhotosV33=movementPhotosV33.filter(p=>String(p.movementId)!==String(movementId));
+
+  closeReturnModal();
+  assetDetailCacheV36.clear();
+  await syncFromSupabase();
+  renderAll();
+  toast(warnings?`Devolución guardada; ${warnings} foto(s) no pudieron subirse`:'Devolución registrada con 4 fotografías');
+ }catch(err){
+  console.error(err);
+  toast(customRpcError(err));
+ }finally{
+  if(confirmBtn){confirmBtn.disabled=false;confirmBtn.textContent='CONFIRMAR';}
+ }
+}
+
 /* INIT */
 ensureDefaultAdmin().then(()=>applySession());
 buildInspection();buildPhotos();wirePhotos();
@@ -5541,5 +7073,7 @@ document.addEventListener("keydown",e=>{
  }
 });
 </script>
+
+<!-- V40 — Formato uniforme de activos: NÚMERO - ITEM en todas las vistas -->
 </body>
 </html>
