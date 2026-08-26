@@ -1349,15 +1349,6 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       </div>
       <div class="profile-menu">
 
-        <button class="pwa-install-card" id="pwaInstallCard" type="button" onclick="installPwaV27()">
-          <span class="profile-option-icon"><i data-lucide="download" aria-hidden="true"></i></span>
-          <strong>Instalar aplicación</strong>
-          <small id="pwaInstallHint">Instalar en este dispositivo.</small>
-        </button>
-        <div class="pwa-status-card" id="pwaStatusCard">
-          <strong>Estado PWA:</strong> comprobando…
-        </div>
-
         <button class="admin-only" onclick="go('users')">
           <span class="profile-option-icon"><i data-lucide="users-round" aria-hidden="true"></i></span>
           <strong>Administrar usuarios</strong>
@@ -1380,12 +1371,6 @@ html.pwa-standalone .pwa-install-card{display:none!important}
           <span class="profile-option-icon"><i data-lucide="download" aria-hidden="true"></i></span>
           <strong>Exportar respaldo</strong>
           <small>Descargar una copia de los datos.</small>
-        </button>
-
-        <button class="admin-only" onclick="resetDemo()">
-          <span class="profile-option-icon"><i data-lucide="rotate-ccw" aria-hidden="true"></i></span>
-          <strong>Restablecer datos</strong>
-          <small>Reiniciar catálogos y movimientos.</small>
         </button>
 
         <button class="logout-card" onclick="logout()">
