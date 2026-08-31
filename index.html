@@ -939,6 +939,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
             </div>
             <div class="field"><label class="req">FECHA DE ENTREGA</label><input id="fechaEntrega" name="fechaEntrega" type="date" required></div>
             <div class="field"><label class="req">FECHA DE DEVOLUCIÓN</label><input id="fechaDevolucion" name="fechaDevolucion" type="date" required></div>
+            <div class="field"><label class="req">HORÓMETRO INICIAL</label><input id="horometroInicial" name="horometroInicial" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej. 1250.5" required></div>
             <div class="field">
               <label class="req">FINCA</label>
               <div class="option-grid" data-name="finca">
@@ -1431,6 +1432,10 @@ html.pwa-standalone .pwa-install-card{display:none!important}
         <button class="choice na" type="button" data-value="N/A">N/A</button>
       </div>
       <input id="returnCondition" type="hidden">
+    </div>
+    <div class="field" id="returnHorometerField">
+      <label class="req">HORÓMETRO FINAL</label>
+      <input id="returnHorometroFinal" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej. 1375.8">
     </div>
     <div class="field"><label>OBSERVACIÓN</label><textarea id="returnNotes"></textarea></div>
 
@@ -2884,6 +2889,10 @@ function openReturn(id,assetClass){
  document.getElementById("returnCondition").value="";
  document.querySelectorAll('[data-name="returnCondition"] .choice').forEach(b=>b.classList.remove("active"));
  document.getElementById("returnNotes").value="";
+ const returnHorometerInput=document.getElementById("returnHorometroFinal");
+ const returnHorometerField=document.getElementById("returnHorometerField");
+ if(returnHorometerInput)returnHorometerInput.value="";
+ if(returnHorometerField)returnHorometerField.style.display=assetKindV32(e.assetClass)==="EQUIPO"?"":"none";
  const activeDelivery=latestDeliveryForAssetV28(e);
  const editLoanButton=(isAdmin()&&activeDelivery)?`<div class="movement-actions"><button type="button" onclick="closeReturnModal();openLoanEditorV28('${String(activeDelivery.id).replace(/'/g,"\\'")}')">EDITAR PRÉSTAMO</button></div>`:"";
  document.getElementById("returnModalInfo").innerHTML=`<div class="return-card"><div class="return-icon">${e.assetClass==="IMPLEMENTO"?'<i data-lucide="wrench" aria-hidden="true"></i>':'<i data-lucide="tractor" aria-hidden="true"></i>'}</div><div class="return-main"><strong>${esc(e.id)} - ${esc(e.type)}</strong><small>${esc(e.assetClass||"EQUIPO")} · ${esc(e.finca||"SIN FINCA")} · ${esc(e.assignedTo||"")}</small></div></div>${editLoanButton}`;
@@ -4532,6 +4541,13 @@ async function saveForm(){
  }
 
  const d=collectForm();
+ d.horometroInicial=normalizeHorometerV43(d.horometroInicial);
+ if(!validHorometerV43(d.horometroInicial)){
+  setStep(0);
+  toast("El HORÓMETRO INICIAL debe ser un número válido");
+  document.getElementById("horometroInicial")?.focus();
+  return;
+ }
  d.firmaTaller=roleSignatureData("taller");
  d.firmaCampo=roleSignatureData("campo");
  d.firmaOperador=roleSignatureData("operador");
@@ -6206,6 +6222,7 @@ function deliveryFieldsV32(m,e){
  return [
   ["Fecha de entrega",formatDateOnlyV32(f.fechaEntrega||m?.date)],
   ["Fecha de devolución",formatDateOnlyV32(f.fechaDevolucion||e?.dueDate)],
+  ["Horómetro inicial",f.horometroInicial||f.horometro_inicial||""],
   ["Finca",f.finca||m?.finca||e?.finca||""],
   ["Labor",f.labor||f.actividad||f.trabajo||m?.labor||""],
   ["Asignado a",f.recibidoOperador||m?.operator||e?.assignedTo||f.recibidoPorCampo||""],
@@ -6244,7 +6261,8 @@ function historyMovementDetailsV32(m,e){
   const note=f.observacion||f.detalleDanos||f.descripcionDanos||"";
   return `<div class="asset-history-details"><div class="asset-detail-grid">${fields.map(([a,b])=>detailFieldV32(a,b)).join("")}</div>${note?`<div class="asset-detail-note">${esc(note)}</div>`:""}${movementPhotoGalleryV33(m.id,kind,true)}</div>`;
  }
- return `<div class="asset-history-details"><div class="asset-detail-grid">${detailFieldV32("Condición",m.condition||"")}${detailFieldV32("Finca",m.finca||e.finca||"")}${detailFieldV32("Operador",m.operator||"")}${detailFieldV32("Registro",m.id||"")}</div>${m.notes?`<div class="asset-detail-note">${esc(m.notes)}</div>`:""}${movementPhotoGalleryV33(m.id,kind,true)}</div>`;
+ const returnNotesV43=cleanReturnNotesV43(m.notes);
+ return `<div class="asset-history-details"><div class="asset-detail-grid">${detailFieldV32("Condición",m.condition||"")}${detailFieldV32("Horómetro final",returnHorometerV43(m))}${detailFieldV32("Finca",m.finca||e.finca||"")}${detailFieldV32("Operador",m.operator||"")}${detailFieldV32("Registro",m.id||"")}</div>${returnNotesV43?`<div class="asset-detail-note">${esc(returnNotesV43)}</div>`:""}${movementPhotoGalleryV33(m.id,kind,true)}</div>`;
 }
 function renderAssetHistoryV32(e){
  const rows=movementsForAssetV32(e);
@@ -6775,13 +6793,15 @@ function fullHistoryMovementDetailsV39(m,result){
    ${inspection.length?`<div class="history-inspection-v39"><h4>${kind==='IMPLEMENTO'?'Estado registrado':'Inspección de entrega'}</h4><div class="asset-inspection-list">${inspection.map(([label,value])=>`<div class="asset-inspection-row"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join('')}</div></div>`:''}
    ${movementPhotoGalleryV33(m.id,kind,false)}`;
  }
+ const returnNotesV43=cleanReturnNotesV43(m.notes);
  return `<div class="asset-detail-grid">
   ${detailFieldV32('Fecha de devolución',formatDateTime(m.date))}
   ${detailFieldV32('Condición',m.condition||'')}
+  ${detailFieldV32('Horómetro final',returnHorometerV43(m))}
   ${detailFieldV32('Finca',m.finca||result.finca||'')}
   ${detailFieldV32('Operador',m.operator||'')}
   ${detailFieldV32('N.º de registro',m.code||m.id||'')}
- </div>${m.notes?`<div class="asset-detail-note">${esc(m.notes)}</div>`:''}${movementPhotoGalleryV33(m.id,kind,false)}`;
+ </div>${returnNotesV43?`<div class="asset-detail-note">${esc(returnNotesV43)}</div>`:''}${movementPhotoGalleryV33(m.id,kind,false)}`;
 }
 function renderHistoryDetailV39(){
  const box=document.getElementById('historyDetailContentV39');
@@ -6810,6 +6830,32 @@ function renderHistoryDetailV39(){
    </article>`;
   }).join('')}</div>`:'<div class="history-empty-v39">Este activo no tiene movimientos registrados.</div>'}`;
  refreshIcons();
+}
+
+/* ==========================================================
+   V43 — HORÓMETRO INICIAL / FINAL
+   ========================================================== */
+function normalizeHorometerV43(value){
+ return String(value??"").trim().replace(",",".");
+}
+function validHorometerV43(value){
+ const v=normalizeHorometerV43(value);
+ return /^\d+(?:\.\d+)?$/.test(v);
+}
+function buildReturnNotesV43(horometro,notes){
+ const clean=String(notes||"").trim();
+ const meter=normalizeHorometerV43(horometro);
+ return `[HOROMETRO_FINAL:${meter}]${clean?`\n${clean}`:""}`;
+}
+function returnHorometerV43(m){
+ const f=m?.form||{};
+ if(f.horometroFinal||f.horometro_final)return String(f.horometroFinal||f.horometro_final);
+ const raw=String(m?.notes||"");
+ const match=raw.match(/\[HOROMETRO_FINAL:([^\]]+)\]/i);
+ return match?String(match[1]).trim():"";
+}
+function cleanReturnNotesV43(value){
+ return String(value||"").replace(/\[HOROMETRO_FINAL:[^\]]+\]\s*/i,"").trim();
 }
 
 /* ==========================================================
@@ -6972,7 +7018,23 @@ async function confirmReturn(){
  const e=db.equipment.find(x=>String(x.id)===String(returnEquipmentId)&&assetKindV32(x.assetClass)===assetKindV32(returnAssetClass));
  if(!e){toast('No se encontró el activo seleccionado');return;}
 
- const notes=document.getElementById('returnNotes').value||null;
+ const isEquipmentV43=assetKindV32(e.assetClass)==='EQUIPO';
+ const horometroFinalInputV43=document.getElementById('returnHorometroFinal');
+ const horometroFinalV43=normalizeHorometerV43(horometroFinalInputV43?.value||'');
+ if(isEquipmentV43&&!horometroFinalV43){
+  toast('Completa: HORÓMETRO FINAL');
+  horometroFinalInputV43?.focus();
+  horometroFinalInputV43?.scrollIntoView({behavior:'smooth',block:'center'});
+  return;
+ }
+ if(isEquipmentV43&&!validHorometerV43(horometroFinalV43)){
+  toast('El horómetro final debe ser un número válido');
+  horometroFinalInputV43?.focus();
+  return;
+ }
+
+ const userNotesV43=document.getElementById('returnNotes').value||'';
+ const notes=isEquipmentV43?buildReturnNotesV43(horometroFinalV43,userNotesV43):(userNotesV43||null);
  const confirmBtn=document.querySelector('#returnModal .primary');
  if(confirmBtn){confirmBtn.disabled=true;confirmBtn.textContent='GUARDANDO…';}
 
