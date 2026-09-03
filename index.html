@@ -835,6 +835,24 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 /* V42 — Labor visible en tarjetas de activos asignados */
 .equip-labor-v41{display:block;margin-top:4px;color:#4f5b68;font-size:8.8px;font-weight:800;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
 .damage-photo-v42{margin-top:12px;margin-bottom:0}.damage-photo-v42 .photo-label{color:#4f5966}.damage-photo-v42 .photo-box{border-color:#efb8bc;background:#fffafa}
+
+
+/* ==========================================================
+   V44 — CÁMARA + ADJUNTAR DESDE EL DISPOSITIVO
+   Mantiene un solo input por evidencia para no alterar
+   validación, compresión ni subida existente a Supabase.
+   ========================================================== */
+.photo-box input.photo-input-v44{display:none!important;position:static!important;opacity:1!important;width:0!important;height:0!important}
+.photo-source-actions-v44{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.photo-source-actions-v44 button{
+  min-height:39px;border-radius:9px;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 9px
+}
+.photo-source-actions-v44 .camera-v44{border:1px solid var(--red);background:var(--red);color:#fff}
+.photo-source-actions-v44 .gallery-v44{border:1px solid #d9e0e7;background:#fff;color:#43515f}
+.photo-source-actions-v44 svg{width:16px;height:16px;stroke-width:1.9}
+.photo-source-note-v44{font-size:8px;color:#8a929d;line-height:1.3;margin-top:5px}
+@media(max-width:340px){.photo-source-actions-v44{grid-template-columns:1fr}}
+
 </style>
 
 <!-- Iconos Lucide: mismo lenguaje visual lineal de la referencia -->
@@ -997,7 +1015,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 
       <section class="form-step" data-step="3">
         <div class="card">
-          <div class="card-head"><h2>Evidencia fotográfica</h2><p>Toque cada recuadro para abrir la cámara.</p></div>
+          <div class="card-head"><h2>Evidencia fotográfica</h2><p>Tome una foto o adjunte una imagen guardada en el dispositivo.</p></div>
           <div class="card-body">
             <div id="photoFields"></div>
             <div class="field">
@@ -1191,7 +1209,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
 
       <section class="form-step implement-step" data-istep="2">
         <div class="card">
-          <div class="card-head"><h2>Evidencia del implemento</h2><p>Fotografías independientes del formato de equipos.</p></div>
+          <div class="card-head"><h2>Evidencia del implemento</h2><p>Puede tomar las fotos o adjuntarlas desde el dispositivo.</p></div>
           <div class="card-body" id="implementPhotoFields"></div>
         </div>
       </section>
@@ -1467,7 +1485,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
           </div>
         </div>
       </div>
-      <div class="return-photo-help-v37">Las 4 fotografías son obligatorias y quedarán asociadas a este registro de devolución.</div>
+      <div class="return-photo-help-v37">Las 4 fotografías son obligatorias. Puede tomarlas con la cámara o adjuntarlas desde el dispositivo; quedarán asociadas a este registro de devolución.</div>
     </div>
 
     <div class="modal-actions"><button class="secondary" type="button" onclick="closeReturnModal()">CANCELAR</button><button class="primary" type="button" onclick="confirmReturn()">CONFIRMAR</button></div>
@@ -7073,9 +7091,59 @@ async function confirmReturn(){
  }
 }
 
+
+
+/* ==========================================================
+   V44 — selector explícito: TOMAR FOTO / ADJUNTAR FOTO
+   Se usa la API nativa File + atributo capture del navegador.
+   No se duplica el input: el mismo archivo sigue siendo leído
+   por las funciones existentes de validación y Supabase.
+   ========================================================== */
+function openPhotoSourceV44(input,mode){
+ if(!input)return;
+ if(mode==='camera') input.setAttribute('capture','environment');
+ else input.removeAttribute('capture');
+ try{ input.click(); }catch(_e){ toast('No se pudo abrir el selector de imágenes'); }
+}
+function enhancePhotoInputV44(input){
+ if(!input||input.dataset.sourceUiV44==='1')return;
+ const box=input.closest('.photo-box');
+ const card=input.closest('.photo-card');
+ if(!box||!card)return;
+ input.dataset.sourceUiV44='1';
+ input.classList.add('photo-input-v44');
+
+ const ph=box.querySelector('.photo-placeholder');
+ if(ph){
+  const span=ph.querySelector('span');
+  if(span)span.textContent='📷';
+  const text=[...ph.childNodes].find(n=>n.nodeType===Node.TEXT_NODE);
+  if(text)text.nodeValue=' FOTO DEL EQUIPO';
+ }
+
+ const actions=document.createElement('div');
+ actions.className='photo-source-actions-v44';
+ actions.innerHTML=`
+  <button type="button" class="camera-v44"><i data-lucide="camera" aria-hidden="true"></i><span>TOMAR FOTO</span></button>
+  <button type="button" class="gallery-v44"><i data-lucide="image-plus" aria-hidden="true"></i><span>ADJUNTAR FOTO</span></button>`;
+ actions.querySelector('.camera-v44').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openPhotoSourceV44(input,'camera')});
+ actions.querySelector('.gallery-v44').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openPhotoSourceV44(input,'gallery')});
+ box.insertAdjacentElement('afterend',actions);
+
+ const note=document.createElement('div');
+ note.className='photo-source-note-v44';
+ note.textContent='Puedes usar la cámara o seleccionar una imagen guardada en el dispositivo.';
+ actions.insertAdjacentElement('afterend',note);
+}
+function enhanceAllPhotoInputsV44(root=document){
+ root.querySelectorAll('.photo-box input[type="file"][accept*="image"]').forEach(enhancePhotoInputV44);
+ refreshIcons();
+}
+
 /* INIT */
 ensureDefaultAdmin().then(()=>applySession());
 buildInspection();buildPhotos();wirePhotos();
+enhanceAllPhotoInputsV44();
 document.getElementById("id").value=makeId();
 document.getElementById("fechaEntrega").value=todayISO();
 document.getElementById("assetClass").value="EQUIPO";
