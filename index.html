@@ -141,6 +141,14 @@ textarea{min-height:90px;resize:vertical}
   display:flex;align-items:center;justify-content:space-between;text-align:left;padding:0 12px;color:#333
 }
 .picker-trigger.empty{color:#888}
+.asset-picker-row-v45{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:stretch}
+.asset-picker-add-v45{
+  min-width:104px;min-height:49px;border:1px solid #e4b5b8;background:#fff5f5;color:var(--red);
+  border-radius:9px;padding:0 11px;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap
+}
+.asset-picker-add-v45 svg{width:15px;height:15px;stroke-width:2}
+.asset-picker-add-v45:active{background:#ffe8e9}
+@media(max-width:360px){.asset-picker-row-v45{grid-template-columns:1fr}.asset-picker-add-v45{width:100%;min-height:42px}}
 .photo-card{margin-bottom:14px}
 .photo-label{font-size:11px;color:#666;font-weight:700;margin-bottom:7px}
 .photo-box{
@@ -344,6 +352,23 @@ textarea{min-height:90px;resize:vertical}
 .implement-ref strong{display:block;font-size:13px}
 .implement-ref small{display:block;color:#777;font-size:10px;margin-top:4px}
 
+
+/* V47 — SUGERENCIAS DE TIPO SIN BLOQUEAR TIPOS NUEVOS */
+.asset-type-field-v47{position:relative}
+.asset-type-suggestions-v47{
+  display:none;position:relative;z-index:8;margin-top:6px;max-height:190px;overflow:auto;
+  background:#fff;border:1px solid #dfe4ea;border-radius:10px;box-shadow:0 8px 22px rgba(22,34,51,.10)
+}
+.asset-type-suggestions-v47.open{display:block}
+.asset-type-option-v47{
+  width:100%;min-height:42px;border:0;border-bottom:1px solid #f0f2f4;background:#fff;
+  padding:9px 12px;text-align:left;font-size:11px;font-weight:700;color:#343b45
+}
+.asset-type-option-v47:last-child{border-bottom:0}
+.asset-type-option-v47:active{background:#f7f8fa}
+.asset-type-new-v47{padding:9px 12px;background:#fff9e8;color:#735500;font-size:9px;line-height:1.35;border-top:1px solid #f0e3bd}
+.asset-type-help-v47{font-size:8.5px;color:#8a929d;line-height:1.3;margin-top:5px}
+.asset-type-empty-v47{padding:10px 12px;color:#8a929d;font-size:9px;text-align:center}
 
 /* LOGIN Y USUARIOS */
 .auth-screen{
@@ -925,7 +950,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       <div class="quick-actions">
         <button class="quick" onclick="openDeliveryTypeModal()"><span class="quick-icon quick-red"><i data-lucide="file-plus-2" aria-hidden="true"></i></span><span class="quick-copy"><strong>Nueva entrega</strong><span>Equipo o implemento</span></span><span class="quick-chevron"><i data-lucide="chevron-right" aria-hidden="true"></i></span></button>
         <button class="quick" onclick="go('returns')"><span class="quick-icon quick-blue"><i data-lucide="log-in" aria-hidden="true"></i></span><span class="quick-copy"><strong>Devolución</strong><span>Recibir un equipo</span></span><span class="quick-chevron"><i data-lucide="chevron-right" aria-hidden="true"></i></span></button>
-        <button class="quick" onclick="openEquipmentEditor()"><span class="quick-icon quick-purple"><i data-lucide="plus" aria-hidden="true"></i></span><span class="quick-copy"><strong>Agregar equipo</strong><span>Crear nuevo equipo</span></span><span class="quick-chevron"><i data-lucide="chevron-right" aria-hidden="true"></i></span></button>
+        <button class="quick" onclick="openEquipmentEditor()"><span class="quick-icon quick-purple"><i data-lucide="plus" aria-hidden="true"></i></span><span class="quick-copy"><strong>Agregar activo</strong><span>Equipo o implemento</span></span><span class="quick-chevron"><i data-lucide="chevron-right" aria-hidden="true"></i></span></button>
         <button class="quick" onclick="go('history')"><span class="quick-icon quick-gray"><i data-lucide="history" aria-hidden="true"></i></span><span class="quick-copy"><strong>Historial</strong><span>Ver movimientos</span></span><span class="quick-chevron"><i data-lucide="chevron-right" aria-hidden="true"></i></span></button>
       </div>
 
@@ -979,9 +1004,14 @@ html.pwa-standalone .pwa-install-card{display:none!important}
             <input id="assetClass" name="assetClass" type="hidden" value="EQUIPO" required>
             <div class="field">
               <label class="req">NUMERO DE EQUIPO</label>
-              <button class="picker-trigger empty" id="numeroEquipoTrigger" type="button" onclick="openPicker('numeroEquipo')">
-                <span>Seleccione un equipo</span><span>▼</span>
-              </button>
+              <div class="asset-picker-row-v45">
+                <button class="picker-trigger empty" id="numeroEquipoTrigger" type="button" onclick="openPicker('numeroEquipo')">
+                  <span>Seleccione un equipo</span><span>▼</span>
+                </button>
+                <button class="asset-picker-add-v45" type="button" onclick="openEquipmentEditor('','EQUIPO','form')">
+                  <i data-lucide="plus" aria-hidden="true"></i><span>NUEVO EQUIPO</span>
+                </button>
+              </div>
               <input id="numeroEquipo" name="numeroEquipo" type="hidden" required>
             </div>
           </div>
@@ -1160,9 +1190,14 @@ html.pwa-standalone .pwa-install-card{display:none!important}
             </div>
             <div class="field">
               <label class="req">REFERENCIA / NÚMERO DE IMPLEMENTO</label>
-              <button class="picker-trigger empty" id="implementNumeroTrigger" type="button" onclick="openPicker('implemento')">
-                <span>Seleccione un implemento</span><span>▼</span>
-              </button>
+              <div class="asset-picker-row-v45">
+                <button class="picker-trigger empty" id="implementNumeroTrigger" type="button" onclick="openPicker('implemento')">
+                  <span>Seleccione un implemento</span><span>▼</span>
+                </button>
+                <button class="asset-picker-add-v45" type="button" onclick="openEquipmentEditor('','IMPLEMENTO','form')">
+                  <i data-lucide="plus" aria-hidden="true"></i><span>NUEVO IMPLEMENTO</span>
+                </button>
+              </div>
               <input id="implementNumero" name="numeroEquipo" type="hidden" required>
             </div>
             <div class="implement-ref" id="implementSelectedInfo" style="display:none"></div>
@@ -1283,7 +1318,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
     <div class="search-row">
       <div style="display:grid;grid-template-columns:1fr auto;gap:7px">
         <input class="searchbox" id="equipmentSearch" placeholder="Buscar equipo, implemento, número o tipo..." oninput="renderEquipment()">
-        <button class="add-btn" onclick="openEquipmentEditor()">+ EQUIPO</button>
+        <button class="add-btn" onclick="openEquipmentEditor()">+ AGREGAR</button>
       </div>
     </div>
     <div class="filters">
@@ -1337,7 +1372,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       </div>
       <div class="catalog-toolbar">
         <input class="searchbox" id="catalogSearch" placeholder="Buscar número o tipo..." oninput="renderCatalog()">
-        <button class="add-btn" id="catalogAddBtn" onclick="openEquipmentEditor()">+ NUEVO</button>
+        <button class="add-btn" id="catalogAddBtn" onclick="openEquipmentEditor()">+ AGREGAR</button>
       </div>
       <div id="catalogList"></div>
     </div>
@@ -1509,7 +1544,27 @@ html.pwa-standalone .pwa-install-card{display:none!important}
   </div>
 </div>
 
-<!-- EDITOR DE EQUIPOS -->
+<!-- SELECTOR PARA AGREGAR ACTIVO -->
+<div class="modal" id="assetAddTypeModal">
+  <div class="modal-card">
+    <div class="modal-head"><h3>¿Qué desea agregar?</h3><button onclick="closeAssetAddTypeModal()">×</button></div>
+    <div style="font-size:11px;color:#777;line-height:1.45">Seleccione primero si desea crear un equipo o un implemento.</div>
+    <div class="delivery-choice-grid">
+      <button class="delivery-choice" type="button" onclick="selectAssetTypeToAdd('EQUIPO')">
+        <span class="big-icon"><i data-lucide="tractor" aria-hidden="true"></i></span>
+        <strong>EQUIPO</strong>
+        <small>Agregar un nuevo equipo al catálogo.</small>
+      </button>
+      <button class="delivery-choice" type="button" onclick="selectAssetTypeToAdd('IMPLEMENTO')">
+        <span class="big-icon"><i data-lucide="wrench" aria-hidden="true"></i></span>
+        <strong>IMPLEMENTO</strong>
+        <small>Agregar un nuevo implemento al catálogo.</small>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDITOR DE EQUIPOS / IMPLEMENTOS -->
 <div class="modal" id="equipmentEditorModal">
   <div class="modal-card">
     <div class="modal-head"><h3 id="equipmentEditorTitle">Nuevo equipo</h3><button onclick="closeEquipmentEditor()">×</button></div>
@@ -1517,7 +1572,12 @@ html.pwa-standalone .pwa-install-card{display:none!important}
       <input id="equipmentEditorOriginalId" type="hidden">
       <input id="equipmentEditorAssetClass" type="hidden" value="EQUIPO">
       <div class="field"><label class="req" id="equipmentEditorNumberLabel">NÚMERO DE EQUIPO</label><input id="equipmentEditorId" type="text" placeholder="Ej. 484104"></div>
-      <div class="field"><label class="req" id="equipmentEditorTypeLabel">TIPO DE EQUIPO</label><input id="equipmentEditorType" type="text" placeholder="Ej. TRACTOR"></div>
+      <div class="field asset-type-field-v47">
+        <label class="req" id="equipmentEditorTypeLabel">TIPO DE EQUIPO</label>
+        <input id="equipmentEditorType" type="text" placeholder="Ej. TRACTOR" autocomplete="off" onfocus="openAssetTypeSuggestionsV47()" oninput="renderAssetTypeSuggestionsV47(true)">
+        <div class="asset-type-suggestions-v47" id="assetTypeSuggestionsV47"></div>
+        <div class="asset-type-help-v47">Selecciona un tipo ya guardado o escribe uno nuevo.</div>
+      </div>
       <div class="field">
         <label id="equipmentEditorPhotoLabel">FOTO DEL EQUIPO</label>
         <div class="equipment-photo-editor">
@@ -1729,7 +1789,7 @@ function openEquipmentEditor(id=""){
  modal.classList.add("open");refreshIcons();
  setTimeout(()=>number.focus(),120);
 }
-function closeEquipmentEditor(){document.getElementById("equipmentEditorModal").classList.remove("open")}
+function closeEquipmentEditor(){document.getElementById("equipmentEditorModal").classList.remove("open");assetEditorOriginV45=""}
 function normalizeEquipmentNumber(v){return String(v||"").trim().toUpperCase().replace(/-/g,"")}
 function saveEquipmentEditor(){
  if(!requireAdmin())return;
@@ -5610,17 +5670,23 @@ try{
    - Implementos usan app_guardar_implemento/app_eliminar_implemento.
    ========================================================== */
 let assetEditorClassV31="EQUIPO";
+let assetEditorOriginV45="";
+
+function normalizeAssetCodeV45(value,kind){
+ const raw=String(value||"").trim().toUpperCase();
+ return kind==="EQUIPO"?raw.replace(/-/g,""):raw;
+}
 
 function setCatalogTab(tab){
  if(!requireAdmin())return;
  catalogTab=String(tab||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
  document.getElementById("catalogEquipmentTab").classList.toggle("active",catalogTab==="EQUIPO");
  document.getElementById("catalogImplementTab").classList.toggle("active",catalogTab==="IMPLEMENTO");
- // Se conserva la creación de nuevos registros únicamente para EQUIPOS.
- document.getElementById("catalogAddBtn").style.display=catalogTab==="EQUIPO"?"block":"none";
+ // El botón genérico pregunta primero si se agregará un EQUIPO o un IMPLEMENTO.
+ document.getElementById("catalogAddBtn").style.display="block";
  document.getElementById("catalogNote").textContent=catalogTab==="EQUIPO"
   ?"Los EQUIPOS se pueden agregar, editar o borrar."
-  :"Los IMPLEMENTOS se pueden editar o eliminar. No se puede eliminar un implemento mientras esté asignado.";
+  :"Los IMPLEMENTOS se pueden agregar, editar o eliminar. No se puede eliminar un implemento mientras esté asignado.";
  renderCatalog();
 }
 
@@ -5684,6 +5750,53 @@ function equipmentCard(e){
  </div>`;
 }
 
+/* V47 — Referencias de tipos existentes para equipo/implemento */
+function getSavedAssetTypesV47(kind){
+ const target=String(kind||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const unique=new Map();
+ (db?.equipment||[]).forEach(item=>{
+  if(String(item?.assetClass||"EQUIPO").toUpperCase()!==target)return;
+  const value=String(item?.type||"").trim();
+  if(!value)return;
+  const key=value.toLocaleLowerCase("es");
+  if(!unique.has(key))unique.set(key,value);
+ });
+ return [...unique.values()].sort((a,b)=>a.localeCompare(b,"es",{sensitivity:"base",numeric:true}));
+}
+function openAssetTypeSuggestionsV47(){
+ renderAssetTypeSuggestionsV47(true);
+}
+function closeAssetTypeSuggestionsV47(){
+ document.getElementById("assetTypeSuggestionsV47")?.classList.remove("open");
+}
+function renderAssetTypeSuggestionsV47(open=true){
+ const input=document.getElementById("equipmentEditorType");
+ const box=document.getElementById("assetTypeSuggestionsV47");
+ if(!input||!box)return;
+ const kind=String(document.getElementById("equipmentEditorAssetClass")?.value||assetEditorClassV31||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const query=String(input.value||"").trim();
+ const q=query.toLocaleLowerCase("es");
+ const all=getSavedAssetTypesV47(kind);
+ const matches=(q?all.filter(type=>type.toLocaleLowerCase("es").includes(q)):all).slice(0,30);
+ const exact=all.some(type=>type.toLocaleLowerCase("es")===q);
+ let html=matches.map(type=>`<button class="asset-type-option-v47" type="button" data-value="${esc(type)}" onmousedown="event.preventDefault()" onclick="selectAssetTypeSuggestionV47(this.dataset.value)">${esc(type)}</button>`).join("");
+ if(!matches.length)html='<div class="asset-type-empty-v47">No hay tipos guardados que coincidan.</div>';
+ if(query&&!exact)html+=`<div class="asset-type-new-v47">Se guardará como tipo nuevo: <b>${esc(query)}</b></div>`;
+ box.innerHTML=html;
+ box.classList.toggle("open",!!open);
+}
+function selectAssetTypeSuggestionV47(value){
+ const input=document.getElementById("equipmentEditorType");
+ if(!input)return;
+ input.value=String(value||"");
+ closeAssetTypeSuggestionsV47();
+ input.focus();
+}
+document.addEventListener("click",event=>{
+ const field=event.target.closest(".asset-type-field-v47");
+ if(!field)closeAssetTypeSuggestionsV47();
+});
+
 function applyAssetEditorLabelsV31(kind){
  const isImplement=kind==="IMPLEMENTO";
  const word=isImplement?"IMPLEMENTO":"EQUIPO";
@@ -5701,10 +5814,36 @@ function applyAssetEditorLabelsV31(kind){
  if(title)title.textContent=`Editar ${isImplement?"implemento":"equipo"}`;
 }
 
-function openEquipmentEditor(id="",assetClass="EQUIPO"){
+let assetAddOriginV46="";
+function openAssetAddTypeModal(origin=""){
+ if(!requireAdmin())return;
+ assetAddOriginV46=String(origin||"");
+ document.getElementById("assetAddTypeModal")?.classList.add("open");
+ refreshIcons();
+}
+function closeAssetAddTypeModal(){
+ document.getElementById("assetAddTypeModal")?.classList.remove("open");
+ assetAddOriginV46="";
+}
+function selectAssetTypeToAdd(kind){
+ const selected=String(kind||"").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
+ const origin=assetAddOriginV46;
+ document.getElementById("assetAddTypeModal")?.classList.remove("open");
+ assetAddOriginV46="";
+ openEquipmentEditor("",selected,origin);
+}
+
+function openEquipmentEditor(id="",assetClass="EQUIPO",origin=""){
+ // Cuando se pulsa un botón genérico de AGREGAR, primero pregunta el tipo de activo.
+ if(arguments.length===0){
+  openAssetAddTypeModal("");
+  return;
+ }
+
  if(!requireAdmin())return;
  const kind=String(assetClass||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
  assetEditorClassV31=kind;
+ assetEditorOriginV45=String(origin||"");
  const modal=document.getElementById("equipmentEditorModal");
  const original=document.getElementById("equipmentEditorOriginalId");
  const classInput=document.getElementById("equipmentEditorAssetClass");
@@ -5713,6 +5852,7 @@ function openEquipmentEditor(id="",assetClass="EQUIPO"){
  const photoInput=document.getElementById("equipmentEditorPhoto");
  if(classInput)classInput.value=kind;
  applyAssetEditorLabelsV31(kind);
+ closeAssetTypeSuggestionsV47();
 
  equipmentEditorPhotoFileV25=null;
  equipmentEditorPhotoRemovedV25=false;
@@ -5731,11 +5871,7 @@ function openEquipmentEditor(id="",assetClass="EQUIPO"){
   equipmentEditorExistingUrlV25=e.photo||"";
   setEquipmentPhotoPreview(equipmentEditorExistingUrlV25);
  }else{
-  if(kind==="IMPLEMENTO"){
-   toast("Los implementos existentes se pueden editar desde Administrar catálogos");
-   return;
-  }
-  document.getElementById("equipmentEditorTitle").textContent="Nuevo equipo";
+  document.getElementById("equipmentEditorTitle").textContent=kind==="IMPLEMENTO"?"Nuevo implemento":"Nuevo equipo";
   original.value="";
   number.value="";
   type.value="";
@@ -5758,12 +5894,19 @@ async function uploadAssetPhotoUrlV31(code,kind){
 async function saveEquipmentEditor(){
  if(!requireAdmin()||!customSessionToken)return;
  const kind=String(document.getElementById("equipmentEditorAssetClass")?.value||assetEditorClassV31||"EQUIPO").toUpperCase()==="IMPLEMENTO"?"IMPLEMENTO":"EQUIPO";
- const original=normalizeEquipmentNumber(document.getElementById("equipmentEditorOriginalId").value);
- const id=normalizeEquipmentNumber(document.getElementById("equipmentEditorId").value);
+ const original=normalizeAssetCodeV45(document.getElementById("equipmentEditorOriginalId").value,kind);
+ const id=normalizeAssetCodeV45(document.getElementById("equipmentEditorId").value,kind);
  const type=String(document.getElementById("equipmentEditorType").value||"").trim();
  const noun=kind==="IMPLEMENTO"?"implemento":"equipo";
+ const isNew=!original;
+ const editorOrigin=assetEditorOriginV45;
  if(!id||!type){toast(`Completa número y tipo de ${noun}`);return;}
- if(kind==="IMPLEMENTO"&&!original){toast("Solo se permite editar implementos existentes");return;}
+ const duplicate=db.equipment.find(e=>
+  String(e.assetClass||"EQUIPO").toUpperCase()===kind &&
+  normalizeAssetCodeV45(e.id,kind)===id &&
+  normalizeAssetCodeV45(e.id,kind)!==original
+ );
+ if(duplicate){toast(`Ese número de ${noun} ya existe`);return;}
 
  let photoUrl=null;
  try{
@@ -5793,9 +5936,27 @@ async function saveEquipmentEditor(){
  equipmentEditorExistingUrlV25=photoUrl||"";
  closeEquipmentEditor();
  await syncFromSupabase();
+
+ // Si se creó desde el formulario, selecciónalo automáticamente para continuar la entrega.
+ if(editorOrigin==="form"){
+  if(kind==="EQUIPO"&&currentView==="delivery"){
+   setPickerValue("numeroEquipo","numeroEquipoTrigger",id);
+   saveDraft();
+  }else if(kind==="IMPLEMENTO"&&currentView==="implement"){
+   setPickerValue("implementNumero","implementNumeroTrigger",id);
+   showImplementSelected(id);
+   saveImplementDraft();
+  }
+ }
+
  renderCatalog();
  renderAll();
- toast(kind==="IMPLEMENTO"?"Implemento actualizado":"Equipo actualizado");
+ toast(isNew
+  ?(editorOrigin==="form"
+    ?(kind==="IMPLEMENTO"?"Implemento agregado y seleccionado":"Equipo agregado y seleccionado")
+    :(kind==="IMPLEMENTO"?"Implemento agregado":"Equipo agregado"))
+  :(kind==="IMPLEMENTO"?"Implemento actualizado":"Equipo actualizado"));
+ assetEditorOriginV45="";
 }
 
 function deleteEquipment(id,assetClass="EQUIPO"){
