@@ -987,6 +987,14 @@ html.pwa-standalone .pwa-install-card{display:none!important}
   .asset-detail-actions{grid-template-columns:minmax(0,1fr) 44px!important}
 }
 
+
+/* V50 - Estado persistente al guardar devoluciones (evita mensajes fugaces). */
+.return-save-status-v50{display:none;margin:10px 0;padding:12px;border-radius:10px;font-size:11px;line-height:1.5;border:1px solid #dfe4ea;background:#f8fafc;color:#405163}
+.return-save-status-v50.visible{display:block}
+.return-save-status-v50.success{background:#e9f7f1;border-color:#a8d8c3;color:#0d694a}
+.return-save-status-v50.warn{background:#fff7e9;border-color:#eed29e;color:#795217}
+.return-save-status-v50.error{background:#fff1f1;border-color:#efc1c1;color:#a41b1b}
+
 </style>
 
 <!-- Iconos Lucide: mismo lenguaje visual lineal de la referencia -->
@@ -1585,6 +1593,7 @@ html.pwa-standalone .pwa-install-card{display:none!important}
   <div class="modal-card return-modal-card-v37">
     <div class="modal-head"><h3>Registrar devolución</h3><button onclick="closeReturnModal()">×</button></div>
     <div id="returnModalInfo"></div>
+    <div id="returnSaveStatusV50" class="return-save-status-v50" role="status" aria-live="polite"></div>
     <div class="field" style="margin-top:12px">
       <label>ESTADO AL DEVOLVER</label>
       <div class="option-grid" data-name="returnCondition">
@@ -2396,7 +2405,8 @@ function loadDB(){
   const deleted=new Set(stored.deletedEquipmentIds);
 
   /* EQUIPOS predeterminados ya usan el formato continuo. */
-  equipmentCatalog.forEach(item=>{
+  if(!stored.cloudSynced){
+   equipmentCatalog.forEach(item=>{
     if(deleted.has(item.id)) return;
     const existing=stored.equipment.find(e=>e.id===item.id && e.assetClass==="EQUIPO");
     if(!existing) stored.equipment.push(clone(item));
@@ -2412,6 +2422,7 @@ function loadDB(){
     }
   });
 
+  }
   return stored;
  }catch(e){
   return {
@@ -4424,23 +4435,29 @@ async function applySession(){
  }
 
  currentUser=data.user;
+ statusSyncReadyV49=false;
  document.getElementById("authScreen").style.display="none";
  document.body.classList.toggle("role-admin",isAdmin());
  document.getElementById("profileUsername").textContent=currentUser.username||"Usuario";
  document.getElementById("profileRole").textContent=String(currentUser.role||"usuario").toUpperCase();
 
  try{
-  await syncFromSupabase();
-  await restoreCloudDrafts();
+  const didFetch=await initializeStatusSyncV49();
+  // Los borradores se recuperan de la nube solo cuando ya fue necesario descargar datos.
+  // De otro modo se usan los borradores locales y se evita descargar datos sin cambios.
+  if(didFetch)await restoreCloudDrafts();
   cloudReady=true;
+  statusSyncReadyV49=true;
   renderAll();
  }catch(err){
   cloudReady=false;
+  statusSyncReadyV49=false;
   toast(customRpcError(err));
  }
 }
 
 async function logout(){
+ statusSyncReadyV49=false;
  if(sb&&customSessionToken){
   try{await sb.rpc("app_logout",{p_token:customSessionToken})}catch(e){}
  }
@@ -6696,6 +6713,7 @@ function assetLaborV41(e){
  return latest?movementLaborV41(latest):'';
 }
 function applySyncPayloadV36(data){
+ db.cloudSynced=true;
  const activos=data?.activos||[];
  const movimientos=data?.movimientos||[];
  const personal=data?.personal||[];
@@ -7409,6 +7427,368 @@ function enhanceAllPhotoInputsV44(root=document){
  root.querySelectorAll('.photo-box input[type="file"][accept*="image"]').forEach(enhancePhotoInputV44);
  refreshIcons();
 }
+
+/* ============================================================
+   V49 — ESTADOS CADA 5 HORAS, SIN DESCARGAR REGISTROS SIN CAMBIOS
+   Requiere función pública app_revision_estados_v49 del SQL adjunto.
+   - Datos y tarjetas se leen de localStorage entre comprobaciones.
+   - Cada 5 h se consulta SOLO un contador bigint de versión.
+   - Si cambia, descarga una sola vez mediante el RPC ligero V36.
+   - Guardar/entregar/devolver desde este dispositivo conserva el
+     refresco inmediato que ya usaba la aplicación.
+   ============================================================ */
+const STATUS_INTERVAL_V49=5*60*60*1000;
+const STATUS_META_KEY_V49='entrega_estados_revision_cache_v49';
+let statusSyncReadyV49=false;
+let statusCheckInFlightV49=null;
+let warnedMissingStatusRpcV49=false;
+let nextStatusRetryAtV49=0;
+
+function statusOwnerV49(){
+ return String(currentUser?.id||currentUser?.username||currentUser?.email||'').trim().toLowerCase();
+}
+function readStatusMetaV49(){
+ try{return JSON.parse(localStorage.getItem(STATUS_META_KEY_V49)||'null')||{};}
+ catch(_e){return {};}
+}
+function writeStatusMetaV49(version,owner=statusOwnerV49()){
+ if(!owner)return;
+ localStorage.setItem(STATUS_META_KEY_V49,JSON.stringify({
+  owner,version:version===null?null:String(version),checkedAt:Date.now()
+ }));
+}
+function isStatusCheckDueV49(meta=readStatusMetaV49()){
+ const last=Number(meta.checkedAt||0),elapsed=Date.now()-last;
+ return !last||elapsed<0||elapsed>=STATUS_INTERVAL_V49;
+}
+async function readStatusVersionV49(){
+ if(!sb||!customSessionToken)throw new Error('Sesión no disponible');
+ const {data,error}=await sb.rpc('app_revision_estados_v49',{p_token:customSessionToken});
+ if(error)throw error;
+ const version=String(data?.version??'');
+ if(!/^\d+$/.test(version))throw new Error('La respuesta de versión de estados no es válida');
+ return version;
+}
+function reportMissingStatusRpcV49(error){
+ if(warnedMissingStatusRpcV49)return;
+ warnedMissingStatusRpcV49=true;
+ console.warn('Comprobación de estados no disponible. Instala SQL V49 en el proyecto de Supabase.',error);
+ toast('Falta instalar SQL V49 para comprobar cambios de estados');
+}
+
+/* La función de sincronización anterior sigue siendo la única que carga datos.
+   Se envuelve para registrar la revisión ANTES de la carga completa, de forma
+   que un cambio concurrente nunca quede marcado como ya descargado. */
+const syncDataBeforeV49=syncFromSupabase;
+syncFromSupabase=async function(...args){
+ const owner=statusOwnerV49();
+ let revision=null;
+ try{revision=await readStatusVersionV49();}
+ catch(error){reportMissingStatusRpcV49(error);}
+ await syncDataBeforeV49(...args);
+ db.cloudSynced=true;
+ saveDB();
+ if(owner&&owner===statusOwnerV49())writeStatusMetaV49(revision,owner);
+};
+
+async function checkStatusUpdatesV49(allowDuringLogin=false){
+ if(!sb||!customSessionToken||!currentUser)return false;
+ if(!allowDuringLogin&&!statusSyncReadyV49)return false;
+ if(Date.now()<nextStatusRetryAtV49)return false;
+ if(statusCheckInFlightV49)return statusCheckInFlightV49;
+ const owner=statusOwnerV49();
+ const meta=readStatusMetaV49();
+ if(meta.owner===owner&&!isStatusCheckDueV49(meta))return false;
+ statusCheckInFlightV49=(async()=>{
+  // Cada revisión normal recibe solo {version}, no equipos ni movimientos.
+  let remoteRevision;
+  try{remoteRevision=await readStatusVersionV49();}
+  catch(error){
+   // Fallos de red o SQL no provocan descargas completas ni consultas cada minuto.
+   nextStatusRetryAtV49=Date.now()+15*60*1000;
+   reportMissingStatusRpcV49(error);
+   return false;
+  }
+  nextStatusRetryAtV49=0;
+  if(owner!==statusOwnerV49()||!customSessionToken)return false;
+  if(meta.owner===owner&&meta.version===remoteRevision){
+   writeStatusMetaV49(remoteRevision,owner);
+   return false;
+  }
+  // La revisión cambió. Recargar catálogo/movimientos solamente ahora.
+  await syncFromSupabase();
+  if(owner!==statusOwnerV49())return false;
+  renderAll();
+  if(currentView==='catalog'&&isAdmin())renderCatalog();
+  if(currentView==='assetDetail')renderAssetDetailV32();
+  return true;
+ })().finally(()=>{statusCheckInFlightV49=null;});
+ return statusCheckInFlightV49;
+}
+
+async function initializeStatusSyncV49(){
+ const meta=readStatusMetaV49(),owner=statusOwnerV49();
+ const hasLocalSnapshot=!!(owner&&db.cloudSynced&&Array.isArray(db.equipment)&&meta.owner===owner);
+ if(!hasLocalSnapshot){
+  await syncFromSupabase(); // Primera instalación o nueva cuenta: carga inicial necesaria.
+  return true;
+ }
+ if(!isStatusCheckDueV49(meta))return false; // Menos de 5 h: cero consultas de estados.
+ return checkStatusUpdatesV49(true);
+}
+
+// Un reloj LOCAL mira cada minuto si se cumplieron las 5 horas; NO consulta
+// Supabase antes del vencimiento. Al reabrir la pestaña también revisa la hora.
+if(!window.__statusTimerV49){
+ window.__statusTimerV49=setInterval(()=>{
+  if(!document.hidden)checkStatusUpdatesV49().catch(e=>console.warn('Error comprobando estados:',e));
+ },60*1000);
+ document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)checkStatusUpdatesV49().catch(e=>console.warn('Error comprobando estados:',e));
+ });
+ window.addEventListener('focus',()=>{
+  checkStatusUpdatesV49().catch(e=>console.warn('Error comprobando estados:',e));
+ });
+}
+
+/* ============================================================
+   V50 — DEVOLUCIONES FIABLES
+   Corrección de la secuencia: antes el RPC podía guardar una
+   devolución sin devolver el ID y la UI quedaba abierta. Al
+   pulsar nuevamente CONFIRMAR se intentaba registrar dos veces.
+   Separamos el registro del movimiento y la subida de sus fotos.
+   Si la subida falla, REINTENTAR FOTOS nunca vuelve a crear
+   otra devolución. Conserva el intervalo de estados V49 (5 h).
+   ============================================================ */
+let returnTransactionV50=null;
+let returnSavingV50=false;
+
+function showReturnSaveStatusV50(message='',level='info'){
+ const el=document.getElementById('returnSaveStatusV50');
+ if(!el)return;
+ el.textContent=message;
+ el.className='return-save-status-v50'+(message?' visible '+level:'');
+}
+function setReturnConfirmStateV50(busy,label){
+ const btn=document.querySelector('#returnModal .modal-actions .primary');
+ if(!btn)return;
+ btn.disabled=!!busy;
+ btn.textContent=busy?'GUARDANDO…':(label||'CONFIRMAR');
+}
+function returnIsSameAssetV50(m,code,kind){
+ return String(m?.equipmentId??m?.activo_codigo??'')===String(code) &&
+  assetKindV32(m?.assetClass??m?.clase_activo)===assetKindV32(kind);
+}
+function returnIsReturnV50(m){
+ return /return|devol/i.test(String(m?.type??m?.tipo_movimiento??''));
+}
+function returnMovementCandidatesV50(rows,txn){
+ const arr=(Array.isArray(rows)?rows:[]).filter(m=>
+  m?.id && returnIsSameAssetV50(m,txn.code,txn.kind) && returnIsReturnV50(m)
+ );
+ return arr.filter(m=>!txn.beforeIds.has(String(m.id)))
+  .sort((a,b)=>new Date(b.date||b.fecha_evento||0)-new Date(a.date||a.fecha_evento||0));
+}
+async function findSavedReturnIdV50(txn){
+ const returned=extractMovementIdV37(txn.rpcData);
+ // Los RPC antiguos pueden devolver un texto genérico: no usarlo como ID.
+ if(returned && (/^\d+$/.test(String(returned)) || /^[a-f\d]{8}-[a-f\d-]{8,}$/i.test(String(returned))))return String(returned);
+
+ // El refresco ligero V36 contiene los IDs recién creados, sin fotos ni JSON pesado.
+ let rows=returnMovementCandidatesV50(db.movements,txn);
+ if(rows.length)return String(rows[0].id);
+
+ // Si el refresco falla por red, consultar solo el historial del activo.
+ try{
+  const response=await sb.rpc('app_detalle_activo',{
+   p_token:customSessionToken,p_codigo:txn.code,p_clase_activo:txn.kind
+  });
+  if(!response.error){
+   const raw=Array.isArray(response.data)?response.data:(response.data?.movimientos||[]);
+   rows=returnMovementCandidatesV50(raw,txn);
+   if(rows.length)return String(rows[0].id);
+  }
+ }catch(err){console.warn('No se pudo consultar el movimiento devuelto',err);}
+
+ // Último respaldo de solo lectura, restringido al activo y hora de inicio.
+ // Nunca escoger una devolución antigua ni un préstamo como fotografía destino.
+ try{
+  const {data,error}=await sb.from('movimientos')
+   .select('id,activo_codigo,clase_activo,tipo_movimiento,fecha_evento')
+   .eq('activo_codigo',txn.code).eq('clase_activo',txn.kind)
+   .gte('fecha_evento',new Date(txn.startedAt-60000).toISOString())
+   .order('fecha_evento',{ascending:false}).limit(8);
+  if(!error){
+   rows=returnMovementCandidatesV50(data,txn);
+   if(rows.length)return String(rows[0].id);
+  }
+ }catch(err){console.warn('Consulta secundaria de devolución no disponible',err);}
+ return '';
+}
+
+async function uploadReturnPhotosV50(txn){
+ const failures=[];
+ const inputs=[...document.querySelectorAll('#returnPhotoFields input[data-return-photo]')];
+ for(const input of inputs){
+  const pos=input.dataset.returnPhoto||'devolucion';
+  if(txn.uploaded.has(pos))continue;
+  const file=input.files?.[0];
+  if(!file){failures.push({pos,message:'No se seleccionó la imagen'});continue;}
+  try{
+   const blob=await compressPhotoBlobV25(file,1600,.82);
+   const path=`registros/${txn.movementId}/${safeStorageNameV25(pos)}-${Date.now()}-${Math.random().toString(16).slice(2,8)}.jpg`;
+   const url=await uploadPublicPhotoV25(blob,path);
+   const {data,error}=await sb.rpc('app_registrar_foto',{
+    p_token:customSessionToken,p_movimiento_id:txn.movementId,
+    p_posicion:pos,p_storage_path:path,p_foto_url:url,p_mime_type:'image/jpeg'
+   });
+   if(error||data?.ok===false)throw error||new Error(data?.error||'No se registró la fotografía');
+   txn.uploaded.add(pos);
+   showReturnSaveStatusV50(`Devolución guardada. Subiendo fotografías: ${txn.uploaded.size}/4…`,'info');
+  }catch(err){
+   console.error('Error al guardar foto de devolución:',pos,err);
+   failures.push({pos,message:customRpcError(err,'Error al subir fotografía')});
+  }
+ }
+ return failures;
+}
+
+const openReturnBeforeV50=openReturn;
+openReturn=function(id,kind){
+ returnTransactionV50=null;
+ returnSavingV50=false;
+ showReturnSaveStatusV50();
+ setReturnConfirmStateV50(false);
+ return openReturnBeforeV50(id,kind);
+};
+const closeReturnBeforeV50=closeReturnModal;
+closeReturnModal=function(){
+ returnTransactionV50=null;
+ returnSavingV50=false;
+ showReturnSaveStatusV50();
+ setReturnConfirmStateV50(false);
+ return closeReturnBeforeV50();
+};
+
+// Último controlador efectivo: el botón CONFIRMAR invoca este.
+confirmReturn=async function(){
+ if(returnSavingV50)return;
+ if(!sb||!customSessionToken){showReturnSaveStatusV50('No hay sesión activa. Inicia sesión nuevamente para guardar.','error');return;}
+
+ if(!returnTransactionV50){
+  const cond=document.getElementById('returnCondition')?.value||'';
+  if(!cond){showReturnSaveStatusV50('Selecciona el estado en que se devuelve el equipo.','error');return;}
+  if(!validateReturnPhotosV37()){
+   showReturnSaveStatusV50('Debes seleccionar las 4 fotografías antes de registrar la devolución.','error');return;
+  }
+  const e=db.equipment.find(x=>String(x.id)===String(returnEquipmentId)&&assetKindV32(x.assetClass)===assetKindV32(returnAssetClass));
+  if(!e){showReturnSaveStatusV50('No se encontró el equipo seleccionado.','error');return;}
+  if(e.status!=='assigned'){
+   showReturnSaveStatusV50('El equipo ya no está asignado. Actualiza los datos antes de registrar otra devolución.','error');return;
+  }
+  const isEquipment=assetKindV32(e.assetClass)==='EQUIPO';
+  const hField=document.getElementById('returnHorometroFinal');
+  const horometer=normalizeHorometerV43(hField?.value||'');
+  if(isEquipment&&!horometer){showReturnSaveStatusV50('Completa el HORÓMETRO FINAL.','error');hField?.focus();return;}
+  if(isEquipment&&!validHorometerV43(horometer)){
+   showReturnSaveStatusV50('El horómetro final debe ser un número válido.','error');hField?.focus();return;
+  }
+  const userNotes=document.getElementById('returnNotes')?.value||'';
+  const notes=isEquipment?buildReturnNotesV43(horometer,userNotes):(userNotes||null);
+  returnTransactionV50={
+   code:String(e.id),kind:assetKindV32(e.assetClass),condition:cond,notes,
+   startedAt:Date.now(),beforeIds:new Set(db.movements.map(m=>String(m.id))),
+   movementId:'',rpcData:null,registered:false,uploaded:new Set(),refreshError:null,refreshed:false
+  };
+ }
+
+ const txn=returnTransactionV50;
+ returnSavingV50=true;
+ setReturnConfirmStateV50(true);
+ try{
+  if(!txn.registered){
+   showReturnSaveStatusV50('Guardando la devolución en Supabase…','info');
+   const {data,error}=await sb.rpc('app_registrar_devolucion',{
+    p_token:customSessionToken,p_activo_codigo:txn.code,
+    p_clase_activo:txn.kind,p_condicion:txn.condition,p_notas:txn.notes
+   });
+   if(error||data?.ok===false){
+    returnTransactionV50=null; // Error confirmado: aún no existe un registro guardado.
+    showReturnSaveStatusV50('No se pudo guardar la devolución: '+customRpcError(error||new Error(data?.error||'Error del servidor')),'error');
+    return;
+   }
+   txn.rpcData=data;
+   txn.registered=true; // Nunca volver a crear el movimiento por un fallo posterior.
+  }
+
+  // La operación es un cambio real: forzar refresco inmediato, sin esperar 5 horas.
+  if(!txn.refreshed || txn.refreshError){
+   try{
+    await syncFromSupabase();
+    renderAll();
+    txn.refreshError=null;
+    txn.refreshed=true;
+   }catch(err){
+    txn.refreshError=err;
+    console.error('Devolución guardada, pero falló la sincronización',err);
+   }
+  }
+
+  if(!txn.movementId)txn.movementId=await findSavedReturnIdV50(txn);
+  if(!txn.movementId){
+   txn.refreshed=false; // Permitir otra búsqueda, sin recrear el movimiento.
+   showReturnSaveStatusV50(
+    'La devolución fue aceptada por Supabase, pero todavía no se pudo identificar el registro para asociar las fotos. No pulses de nuevo para crear otra devolución: usa REINTENTAR FOTOS. '+(txn.refreshError?customRpcError(txn.refreshError):''),
+    'warn'
+   );
+   return;
+  }
+
+  const failures=await uploadReturnPhotosV50(txn);
+  if(failures.length){
+   showReturnSaveStatusV50(
+    `La devolución quedó registrada, pero faltan ${failures.length} foto(s). ${failures.map(f=>f.pos+': '+f.message).join('; ')}. Pulsa REINTENTAR FOTOS; no se creará otra devolución.`,
+    'warn'
+   );
+   return;
+  }
+
+  movementPhotoLoadedV34.delete(String(txn.movementId));
+  movementPhotosV33=movementPhotosV33.filter(p=>String(p.movementId)!==String(txn.movementId));
+  assetDetailCacheV36.clear();
+  const latest=db.equipment.find(x=>String(x.id)===txn.code&&assetKindV32(x.assetClass)===txn.kind);
+  const statusVerified=latest?.status==='available';
+  if(!statusVerified && !txn.refreshError){
+   // No pintar AVAILABLE si una lectura fresca de la base dice ASSIGNED.
+   txn.refreshed=false;
+   showReturnSaveStatusV50('El registro y las 4 fotografías se enviaron, pero Supabase todavía marca el equipo como ASIGNADO. No repitas la devolución; pulsa VERIFICAR ESTADO para revisar de nuevo.','warn');
+   return;
+  }
+  if(txn.refreshError){
+   // Sin respuesta de lectura, el RPC de escritura sí confirmó recepción.
+   // Estado local provisional, señalado explícitamente como no verificado.
+   if(latest){latest.status='available';latest.assignedTo=null;latest.dueDate=null;latest.dueDays=null;saveDB();}
+   renderAll();
+  }
+  closeReturnModal();
+  if(txn.refreshError){
+   toast('Devolución y 4 fotos enviadas. Estado pendiente de verificar en Supabase.');
+  }else{
+   toast('Devolución y 4 fotografías guardadas correctamente');
+  }
+ }catch(err){
+  console.error('Fallo durante la devolución',err);
+  if(txn.registered){
+   showReturnSaveStatusV50('La devolución ya fue enviada. Falló un paso posterior: '+customRpcError(err)+'. Pulsa REINTENTAR FOTOS sin duplicar el registro.','warn');
+  }else{
+   // No repetir automáticamente errores ambiguos de red durante el RPC.
+   showReturnSaveStatusV50('No se pudo confirmar el registro: '+customRpcError(err)+'. Comprueba el historial antes de intentar otra devolución.','error');
+  }
+ }finally{
+  returnSavingV50=false;
+  setReturnConfirmStateV50(false,returnTransactionV50?.registered?(returnTransactionV50.uploaded.size===4?'VERIFICAR ESTADO':'REINTENTAR FOTOS'):'CONFIRMAR');
+ }
+};
 
 /* INIT */
 ensureDefaultAdmin().then(()=>applySession());
